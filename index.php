@@ -1,17 +1,11 @@
 <?php
 session_start();
-$page = 'dashboard';
+$page = $title = 'dashboard';
 ?>
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mini Cashier - Dashboard</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-</head>
+<?php include './head.php' ?>
 
 <body class="bg-gray-50">
   <div class="flex min-h-screen">
@@ -22,11 +16,11 @@ $page = 'dashboard';
     <main class="flex-1">
       <!-- Top Bar -->
       <header class="bg-white shadow">
-        <div class="px-8 py-4 flex justify-between items-center">
+        <div class="flex items-center justify-between px-8 py-4">
           <h2 class="text-xl font-semibold text-gray-800">Dashboard</h2>
           <div class="flex items-center gap-4">
             <span class="text-gray-600">Welcome, Admin</span>
-            <button class="w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center">
+            <button class="flex items-center justify-center w-10 h-10 text-white bg-blue-600 rounded-full">
               <i class="fas fa-user"></i>
             </button>
           </div>
@@ -37,42 +31,42 @@ $page = 'dashboard';
       <div class="p-8">
         <!-- Stats Cards -->
         <div class="grid grid-cols-4 gap-6 mb-8">
-          <div class="bg-white p-6 rounded-lg shadow flex items-center gap-4">
-            <div class="w-12 h-12 rounded-lg bg-blue-100 flex items-center justify-center text-2xl">
+          <div class="flex items-center gap-4 p-6 bg-white rounded-lg shadow">
+            <div class="flex items-center justify-center w-12 h-12 text-2xl bg-blue-100 rounded-lg">
               <i class="fas fa-box text-blue-600"></i>
             </div>
             <div>
-              <p class="text-gray-600 text-sm">Total Products</p>
+              <p class="text-sm text-gray-600">Total Products</p>
               <p class="text-3xl font-bold text-gray-800">25</p>
             </div>
           </div>
 
-          <div class="bg-white p-6 rounded-lg shadow flex items-center gap-4">
-            <div class="w-12 h-12 rounded-lg bg-green-100 flex items-center justify-center text-2xl">
+          <div class="flex items-center gap-4 p-6 bg-white rounded-lg shadow">
+            <div class="flex items-center justify-center w-12 h-12 text-2xl bg-green-100 rounded-lg">
               <i class="fas fa-users text-green-600"></i>
             </div>
             <div>
-              <p class="text-gray-600 text-sm">Total Customers</p>
+              <p class="text-sm text-gray-600">Total Customers</p>
               <p class="text-3xl font-bold text-gray-800">18</p>
             </div>
           </div>
 
-          <div class="bg-white p-6 rounded-lg shadow flex items-center gap-4">
-            <div class="w-12 h-12 rounded-lg bg-orange-100 flex items-center justify-center text-2xl">
+          <div class="flex items-center gap-4 p-6 bg-white rounded-lg shadow">
+            <div class="flex items-center justify-center w-12 h-12 text-2xl bg-orange-100 rounded-lg">
               <i class="fas fa-exchange-alt text-orange-600"></i>
             </div>
             <div>
-              <p class="text-gray-600 text-sm">Total Transactions</p>
+              <p class="text-sm text-gray-600">Total Transactions</p>
               <p class="text-3xl font-bold text-gray-800">42</p>
             </div>
           </div>
 
-          <div class="bg-white p-6 rounded-lg shadow flex items-center gap-4">
-            <div class="w-12 h-12 rounded-lg bg-purple-100 flex items-center justify-center text-2xl">
+          <div class="flex items-center gap-4 p-6 bg-white rounded-lg shadow">
+            <div class="flex items-center justify-center w-12 h-12 text-2xl bg-purple-100 rounded-lg">
               <i class="fas fa-money-bill-wave text-purple-600"></i>
             </div>
             <div>
-              <p class="text-gray-600 text-sm">Total Sales</p>
+              <p class="text-sm text-gray-600">Total Sales</p>
               <p class="text-3xl font-bold text-gray-800">Rp 5,450,000</p>
             </div>
           </div>
@@ -103,7 +97,7 @@ $page = 'dashboard';
                   <td class="px-6 py-4">24/05/2024</td>
                   <td class="px-6 py-4 font-semibold">Rp 125,000</td>
                   <td class="px-6 py-4">
-                    <button class="px-3 py-1 bg-blue-600 text-white rounded text-xs hover:bg-blue-700">View</button>
+                    <button class="hover:bg-blue-700 px-3 py-1 text-xs text-white bg-blue-600 rounded">View</button>
                   </td>
                 </tr>
                 <tr class="hover:bg-gray-50">
@@ -113,7 +107,7 @@ $page = 'dashboard';
                   <td class="px-6 py-4">24/05/2024</td>
                   <td class="px-6 py-4 font-semibold">Rp 75,000</td>
                   <td class="px-6 py-4">
-                    <button class="px-3 py-1 bg-blue-600 text-white rounded text-xs hover:bg-blue-700">View</button>
+                    <button class="hover:bg-blue-700 px-3 py-1 text-xs text-white bg-blue-600 rounded">View</button>
                   </td>
                 </tr>
                 <tr class="hover:bg-gray-50">
@@ -123,7 +117,7 @@ $page = 'dashboard';
                   <td class="px-6 py-4">23/05/2024</td>
                   <td class="px-6 py-4 font-semibold">Rp 200,000</td>
                   <td class="px-6 py-4">
-                    <button class="px-3 py-1 bg-blue-600 text-white rounded text-xs hover:bg-blue-700">View</button>
+                    <button class="hover:bg-blue-700 px-3 py-1 text-xs text-white bg-blue-600 rounded">View</button>
                   </td>
                 </tr>
                 <tr class="hover:bg-gray-50">
@@ -133,7 +127,7 @@ $page = 'dashboard';
                   <td class="px-6 py-4">23/05/2024</td>
                   <td class="px-6 py-4 font-semibold">Rp 150,000</td>
                   <td class="px-6 py-4">
-                    <button class="px-3 py-1 bg-blue-600 text-white rounded text-xs hover:bg-blue-700">View</button>
+                    <button class="hover:bg-blue-700 px-3 py-1 text-xs text-white bg-blue-600 rounded">View</button>
                   </td>
                 </tr>
                 <tr class="hover:bg-gray-50">
@@ -143,7 +137,7 @@ $page = 'dashboard';
                   <td class="px-6 py-4">23/05/2024</td>
                   <td class="px-6 py-4 font-semibold">Rp 95,000</td>
                   <td class="px-6 py-4">
-                    <button class="px-3 py-1 bg-blue-600 text-white rounded text-xs hover:bg-blue-700">View</button>
+                    <button class="hover:bg-blue-700 px-3 py-1 text-xs text-white bg-blue-600 rounded">View</button>
                   </td>
                 </tr>
               </tbody>
