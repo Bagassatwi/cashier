@@ -134,8 +134,8 @@ if (isset($_GET['edit'])) {
         <!-- Search Bar -->
         <div class="mb-6">
           <form method="GET" class="relative">
-            <i class="fas fa-search absolute left-4 top-3.5 text-gray-400"></i>
-            <input type="text" name="search" placeholder="Search by product name..." value="<?php echo htmlspecialchars($search); ?>" class="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-blue-500 transition">
+            <i class="fas fa-search absolute left-4 top-1/3 text-gray-400"></i>
+            <input type="search" name="search" placeholder="Search by product name..." value="<?php echo htmlspecialchars($search); ?>" class="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-blue-500 transition">
           </form>
         </div>
 
