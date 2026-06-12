@@ -1,6 +1,29 @@
 <?php
 session_start();
+if (empty($_SESSION['status_login'])) {
+  header("location: login.php");
+  exit();
+}
 $page = $title = 'dashboard';
+include './connect.php';
+
+// Get statistics
+$totalProducts = mysqli_fetch_array(mysqli_query($conn, "SELECT COUNT(*) as count FROM products"))['count'];
+$totalCustomers = mysqli_fetch_array(mysqli_query($conn, "SELECT COUNT(*) as count FROM customers"))['count'];
+$totalTransactions = mysqli_fetch_array(mysqli_query($conn, "SELECT COUNT(*) as count FROM transactions"))['count'];
+$totalSales = mysqli_fetch_array(mysqli_query($conn, "SELECT SUM(subtotal) as total FROM transaction_details"))['total'] ?? 0;
+
+// Get recent transactions
+$recentTrans = mysqli_query($conn, "
+  SELECT t.transaction_id, c.customer_name, t.transaction_date, 
+         SUM(td.subtotal) as total
+  FROM transactions t
+  JOIN customers c ON t.customer_id = c.customer_id
+  JOIN transaction_details td ON t.transaction_id = td.transaction_id
+  GROUP BY t.transaction_id
+  ORDER BY t.transaction_date DESC
+  LIMIT 5
+");
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -19,7 +42,7 @@ $page = $title = 'dashboard';
         <div class="flex items-center justify-between px-8 py-4">
           <h2 class="text-xl font-semibold text-gray-800">Dashboard</h2>
           <div class="flex items-center gap-4">
-            <span class="text-gray-600">Welcome, Admin</span>
+            <span class="text-gray-600">Welcome, <?php echo htmlspecialchars($_SESSION['fullname'] ?? $_SESSION['username']); ?></span>
             <button class="flex items-center justify-center w-10 h-10 text-white bg-blue-600 rounded-full">
               <i class="fas fa-user"></i>
             </button>
@@ -37,7 +60,7 @@ $page = $title = 'dashboard';
             </div>
             <div>
               <p class="text-sm text-gray-600">Total Products</p>
-              <p class="text-3xl font-bold text-gray-800">25</p>
+              <p class="text-3xl font-bold text-gray-800"><?php echo $totalProducts; ?></p>
             </div>
           </div>
 
@@ -47,7 +70,7 @@ $page = $title = 'dashboard';
             </div>
             <div>
               <p class="text-sm text-gray-600">Total Customers</p>
-              <p class="text-3xl font-bold text-gray-800">18</p>
+              <p class="text-3xl font-bold text-gray-800"><?php echo $totalCustomers; ?></p>
             </div>
           </div>
 
@@ -57,7 +80,7 @@ $page = $title = 'dashboard';
             </div>
             <div>
               <p class="text-sm text-gray-600">Total Transactions</p>
-              <p class="text-3xl font-bold text-gray-800">42</p>
+              <p class="text-3xl font-bold text-gray-800"><?php echo $totalTransactions; ?></p>
             </div>
           </div>
 
@@ -67,7 +90,7 @@ $page = $title = 'dashboard';
             </div>
             <div>
               <p class="text-sm text-gray-600">Total Sales</p>
-              <p class="text-3xl font-bold text-gray-800">Rp 5,450,000</p>
+              <p class="text-3xl font-bold text-gray-800">Rp <?php echo number_format($totalSales, 0, ',', '.'); ?></p>
             </div>
           </div>
         </div>
@@ -90,56 +113,23 @@ $page = $title = 'dashboard';
                 </tr>
               </thead>
               <tbody class="divide-y divide-gray-200">
-                <tr class="hover:bg-gray-50">
-                  <td class="px-6 py-4">1</td>
-                  <td class="px-6 py-4">TRX-00042</td>
-                  <td class="px-6 py-4">Budi Santoso</td>
-                  <td class="px-6 py-4">24/05/2024</td>
-                  <td class="px-6 py-4 font-semibold">Rp 125,000</td>
-                  <td class="px-6 py-4">
-                    <button class="hover:bg-blue-700 px-3 py-1 text-xs text-white bg-blue-600 rounded">View</button>
-                  </td>
-                </tr>
-                <tr class="hover:bg-gray-50">
-                  <td class="px-6 py-4">2</td>
-                  <td class="px-6 py-4">TRX-00041</td>
-                  <td class="px-6 py-4">Siti Aminah</td>
-                  <td class="px-6 py-4">24/05/2024</td>
-                  <td class="px-6 py-4 font-semibold">Rp 75,000</td>
-                  <td class="px-6 py-4">
-                    <button class="hover:bg-blue-700 px-3 py-1 text-xs text-white bg-blue-600 rounded">View</button>
-                  </td>
-                </tr>
-                <tr class="hover:bg-gray-50">
-                  <td class="px-6 py-4">3</td>
-                  <td class="px-6 py-4">TRX-00040</td>
-                  <td class="px-6 py-4">Andi Wijaya</td>
-                  <td class="px-6 py-4">23/05/2024</td>
-                  <td class="px-6 py-4 font-semibold">Rp 200,000</td>
-                  <td class="px-6 py-4">
-                    <button class="hover:bg-blue-700 px-3 py-1 text-xs text-white bg-blue-600 rounded">View</button>
-                  </td>
-                </tr>
-                <tr class="hover:bg-gray-50">
-                  <td class="px-6 py-4">4</td>
-                  <td class="px-6 py-4">TRX-00039</td>
-                  <td class="px-6 py-4">Dwiey Lestari</td>
-                  <td class="px-6 py-4">23/05/2024</td>
-                  <td class="px-6 py-4 font-semibold">Rp 150,000</td>
-                  <td class="px-6 py-4">
-                    <button class="hover:bg-blue-700 px-3 py-1 text-xs text-white bg-blue-600 rounded">View</button>
-                  </td>
-                </tr>
-                <tr class="hover:bg-gray-50">
-                  <td class="px-6 py-4">5</td>
-                  <td class="px-6 py-4">TRX-00038</td>
-                  <td class="px-6 py-4">Rudi Hermawan</td>
-                  <td class="px-6 py-4">23/05/2024</td>
-                  <td class="px-6 py-4 font-semibold">Rp 95,000</td>
-                  <td class="px-6 py-4">
-                    <button class="hover:bg-blue-700 px-3 py-1 text-xs text-white bg-blue-600 rounded">View</button>
-                  </td>
-                </tr>
+                <?php
+                $no = 1;
+                while ($row = mysqli_fetch_assoc($recentTrans)) {
+                  $transId = str_pad($row['transaction_id'], 5, '0', STR_PAD_LEFT);
+                  $date = date('d/m/Y H:i', strtotime($row['transaction_date']));
+                ?>
+                  <tr class="hover:bg-gray-50">
+                    <td class="px-6 py-4"><?php echo $no++; ?></td>
+                    <td class="px-6 py-4">TRX-<?php echo $transId; ?></td>
+                    <td class="px-6 py-4"><?php echo htmlspecialchars($row['customer_name']); ?></td>
+                    <td class="px-6 py-4"><?php echo $date; ?></td>
+                    <td class="px-6 py-4 font-semibold">Rp <?php echo number_format($row['total'], 0, ',', '.'); ?></td>
+                    <td class="px-6 py-4">
+                      <button class="hover:bg-blue-700 px-3 py-1 text-xs text-white bg-blue-600 rounded">View</button>
+                    </td>
+                  </tr>
+                <?php } ?>
               </tbody>
             </table>
           </div>

@@ -21,7 +21,7 @@ $title = "Login"
           <input class="border border-[#444] rounded-lg p-1" type="password" name="password" id="password" />
         </div>
         <div class="flex flex-row justify-between">
-          <button type="submit" class="hover:bg-blue-700 w-[45%] px-4 py-2 font-bold text-black hover:text-white border-2 border-black rounded">Sign Up</button>
+          <button type="reset" class="hover:bg-gray-700 w-[45%] px-4 py-2 font-bold text-black hover:text-white border-2 border-black rounded">Clear</button>
           <button type="submit" class="hover:bg-blue-700 w-[45%] px-4 py-2 font-bold text-white bg-blue-500 border-2 border-black rounded">Log In</button>
         </div>
       </form>
