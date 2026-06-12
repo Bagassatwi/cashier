@@ -4,7 +4,7 @@ if (empty($_SESSION['status_login'])) {
   header("location: login.php");
   exit();
 }
-$page = $title = "Admin";
+$page = $title = "admin";
 include './connect.php';
 
 $admin_id = $_SESSION['id_admin'];
