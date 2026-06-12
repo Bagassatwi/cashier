@@ -160,120 +160,173 @@ $total = $subtotal;
       <!-- Content -->
       <div class="p-8">
         <?php if ($error) { ?>
-          <div class="mb-4 p-4 bg-red-100 text-red-700 rounded-lg">
-            <i class="fas fa-times-circle mr-2"></i> <?php echo $error; ?>
+          <div class="mb-4 p-4 bg-red-100 border-l-4 border-red-600 text-red-700 rounded-lg">
+            <i class="fas fa-exclamation-circle mr-2"></i><?php echo $error; ?>
           </div>
         <?php } ?>
         <?php if ($success) { ?>
-          <div class="mb-4 p-4 bg-green-100 text-green-700 rounded-lg">
-            <i class="fas fa-check-circle mr-2"></i> <?php echo $success; ?>
+          <div class="mb-4 p-4 bg-green-100 border-l-4 border-green-600 text-green-700 rounded-lg">
+            <i class="fas fa-check-circle mr-2"></i><?php echo $success; ?>
           </div>
         <?php } ?>
-        <div class="grid grid-cols-3 gap-8">
+
+        <div class="mb-8">
+          <h3 class="text-3xl font-bold text-gray-800">Create New Transaction</h3>
+          <p class="text-gray-600 text-sm mt-1">Select products and complete the transaction</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <!-- Form Section -->
-          <div class="col-span-2">
-            <div class="p-6 bg-white rounded-lg shadow">
-              <h3 class="mb-6 text-xl font-bold text-gray-800">New Transaction</h3>
-
-              <form method="POST" id="transactionForm">
-                <!-- Customer Selection -->
-                <div class="mb-6">
-                  <label class="block mb-2 text-sm font-semibold text-gray-700">Customer</label>
-                  <select name="customer_id" id="customer_id" class="focus:outline-none focus:ring-2 focus:ring-blue-600 w-full px-4 py-2 border border-gray-300 rounded-lg" required>
-                    <option value="">Select Customer</option>
-                    <?php while ($customer = mysqli_fetch_assoc($customers)) { ?>
-                      <option value="<?php echo $customer['customer_id']; ?>"><?php echo htmlspecialchars($customer['customer_name']); ?></option>
-                    <?php } ?>
-                  </select>
+          <div class="lg:col-span-2">
+            <div class="bg-white rounded-lg shadow-md overflow-hidden">
+              <!-- Header -->
+              <div class="bg-gradient-to-r from-gray-700 to-gray-800 p-6 border-b border-gray-300">
+                <div class="flex items-center gap-3">
+                  <i class="fas fa-shopping-cart text-white text-2xl"></i>
+                  <h3 class="text-xl font-bold text-white">Transaction Details</h3>
                 </div>
+              </div>
 
-                <!-- Add Product Section -->
-                <div class="mb-6">
-                  <h4 class="mb-4 font-semibold text-gray-800">Add Product</h4>
-
-                  <div class="mb-4">
-                    <label class="block mb-2 text-sm font-semibold text-gray-700">Select Product</label>
-                    <select id="product_select" class="focus:outline-none focus:ring-2 focus:ring-blue-600 w-full px-4 py-2 border border-gray-300 rounded-lg">
-                      <option value="">Select Product</option>
-                      <?php
-                      mysqli_data_seek($products, 0);
-                      while ($product = mysqli_fetch_assoc($products)) {
-                      ?>
-                        <option value="<?php echo $product['product_id']; ?>" data-price="<?php echo $product['price']; ?>" data-stock="<?php echo $product['stock']; ?>">
-                          <?php echo htmlspecialchars($product['product_name']) . ' - Rp ' . number_format($product['price'], 0, ',', '.'); ?>
-                        </option>
+              <div class="p-8">
+                <form method="POST" id="transactionForm">
+                  <!-- Customer Selection -->
+                  <div class="mb-8">
+                    <label class="block mb-3 text-sm font-bold text-gray-700 uppercase tracking-wide">
+                      <i class="fas fa-user text-blue-600 mr-2"></i>Select Customer
+                    </label>
+                    <select name="customer_id" id="customer_id" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-600 transition font-medium" required>
+                      <option value="">-- Choose a customer --</option>
+                      <?php while ($customer = mysqli_fetch_assoc($customers)) { ?>
+                        <option value="<?php echo $customer['customer_id']; ?>"><?php echo htmlspecialchars($customer['customer_name']); ?></option>
                       <?php } ?>
                     </select>
                   </div>
 
-                  <div class="mb-4">
-                    <label class="block mb-2 text-sm font-semibold text-gray-700">Quantity</label>
-                    <input type="number" id="quantity_input" value="1" min="1" class="focus:outline-none focus:ring-2 focus:ring-blue-600 w-full px-4 py-2 border border-gray-300 rounded-lg">
+                  <!-- Add Product Section -->
+                  <div class="mb-8 p-6 bg-blue-50 rounded-lg border-2 border-blue-200">
+                    <h4 class="mb-6 font-bold text-lg text-gray-800 flex items-center gap-2">
+                      <i class="fas fa-plus-circle text-blue-600"></i>Add Product to Cart
+                    </h4>
+
+                    <div class="grid grid-cols-3 gap-4 mb-4">
+                      <div class="col-span-2">
+                        <label class="block mb-2 text-sm font-semibold text-gray-700">Product</label>
+                        <select id="product_select" class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-600 transition">
+                          <option value="">Select a product...</option>
+                          <?php
+                          mysqli_data_seek($products, 0);
+                          while ($product = mysqli_fetch_assoc($products)) {
+                          ?>
+                            <option value="<?php echo $product['product_id']; ?>" data-price="<?php echo $product['price']; ?>" data-stock="<?php echo $product['stock']; ?>">
+                              <?php echo htmlspecialchars($product['product_name']) . ' (Rp ' . number_format($product['price'], 0, ',', '.') . ')'; ?>
+                            </option>
+                          <?php } ?>
+                        </select>
+                      </div>
+
+                      <div>
+                        <label class="block mb-2 text-sm font-semibold text-gray-700">Qty</label>
+                        <input type="number" id="quantity_input" value="1" min="1" class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-600 transition font-medium">
+                      </div>
+                    </div>
+
+                    <button type="button" onclick="addToCart()" class="w-full px-4 py-3 font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition flex items-center justify-center gap-2">
+                      <i class="fas fa-cart-plus"></i> Add to Cart
+                    </button>
                   </div>
 
-                  <button type="button" onclick="addToCart()" class="hover:bg-blue-700 flex items-center justify-center w-full gap-2 px-4 py-2 font-semibold text-white bg-blue-600 rounded-lg">
-                    <i class="fas fa-plus"></i> Add
-                  </button>
-                </div>
-
-                <!-- Product List -->
-                <div class="mb-6">
-                  <h4 class="mb-4 font-semibold text-gray-800">Added Products</h4>
-                  <div class="space-y-3" id="cartItems">
-                    <?php if (count($_SESSION['cart']) == 0) { ?>
-                      <p class="text-gray-500 text-center py-4">No items in cart</p>
-                    <?php } else { ?>
-                      <?php foreach ($_SESSION['cart'] as $item) { ?>
-                        <div class="bg-gray-50 flex items-center justify-between p-4 rounded-lg">
-                          <div>
-                            <p class="font-semibold text-gray-800"><?php echo htmlspecialchars($item['product_name']); ?></p>
-                            <p class="text-sm text-gray-600">Rp <?php echo number_format($item['price'], 0, ',', '.'); ?></p>
-                          </div>
-                          <div class="flex items-center gap-4">
-                            <span class="text-gray-700">Qty: <?php echo $item['quantity']; ?></span>
-                            <span class="font-semibold text-gray-800">Rp <?php echo number_format($item['price'] * $item['quantity'], 0, ',', '.'); ?></span>
-                            <a href="?remove_cart=<?php echo $item['product_id']; ?>" class="hover:text-red-700 text-red-600">
-                              <i class="fas fa-trash"></i>
-                            </a>
-                          </div>
+                  <!-- Cart Items -->
+                  <div class="mb-8">
+                    <h4 class="mb-4 font-bold text-lg text-gray-800 flex items-center gap-2">
+                      <i class="fas fa-list text-gray-600"></i>Items in Cart
+                    </h4>
+                    <div class="space-y-3 max-h-80 overflow-y-auto" id="cartItems">
+                      <?php if (count($_SESSION['cart']) == 0) { ?>
+                        <div class="text-center py-8 text-gray-500">
+                          <i class="fas fa-inbox text-4xl mb-2 opacity-50"></i>
+                          <p>No items in cart yet</p>
                         </div>
+                      <?php } else { ?>
+                        <?php foreach ($_SESSION['cart'] as $item) { ?>
+                          <div class="flex items-center justify-between p-4 bg-gradient-to-r from-gray-50 to-blue-50 rounded-lg border border-gray-200 hover:border-blue-400 transition">
+                            <div class="flex-1">
+                              <p class="font-bold text-gray-800"><?php echo htmlspecialchars($item['product_name']); ?></p>
+                              <p class="text-sm text-gray-600">
+                                Qty: <span class="font-semibold"><?php echo $item['quantity']; ?></span> ×
+                                Rp <span class="font-semibold"><?php echo number_format($item['price'], 0, ',', '.'); ?></span>
+                              </p>
+                            </div>
+                            <div class="flex items-center gap-6">
+                              <div class="text-right">
+                                <p class="text-xs text-gray-600">Subtotal</p>
+                                <p class="text-xl font-bold text-green-600">Rp <?php echo number_format($item['price'] * $item['quantity'], 0, ',', '.'); ?></p>
+                              </div>
+                              <a href="?remove_cart=<?php echo $item['product_id']; ?>" class="inline-flex items-center justify-center w-10 h-10 text-white bg-red-600 hover:bg-red-700 rounded-lg transition">
+                                <i class="fas fa-trash-alt text-sm"></i>
+                              </a>
+                            </div>
+                          </div>
+                        <?php } ?>
                       <?php } ?>
-                    <?php } ?>
+                    </div>
                   </div>
-                </div>
 
-                <!-- Action Buttons -->
-                <div class="flex gap-4">
-                  <a href="transactions.php" class="hover:bg-gray-50 flex-1 px-4 py-2 font-semibold text-gray-700 border border-gray-300 rounded-lg text-center">Reset</a>
-                  <button type="submit" class="hover:bg-green-700 flex-1 px-4 py-2 font-semibold text-white bg-green-600 rounded-lg" onclick="saveTrans()">Save Transaction</button>
-                </div>
-                <input type="hidden" name="action" value="save_transaction">
-              </form>
+                  <!-- Action Buttons -->
+                  <div class="flex gap-4">
+                    <a href="transactions.php" class="flex-1 px-4 py-3 font-bold text-gray-700 border-2 border-gray-300 hover:bg-gray-100 rounded-lg text-center transition">
+                      <i class="fas fa-redo mr-2"></i>Reset
+                    </a>
+                    <button type="submit" class="flex-1 px-4 py-3 font-bold text-white bg-green-600 hover:bg-green-700 rounded-lg transition" onclick="return saveTrans()">
+                      <i class="fas fa-check-circle mr-2"></i>Save Transaction
+                    </button>
+                  </div>
+                  <input type="hidden" name="action" value="save_transaction">
+                </form>
+              </div>
             </div>
           </div>
 
           <!-- Summary Section -->
           <div>
-            <div class="top-8 sticky p-6 bg-white rounded-lg shadow">
-              <h4 class="mb-6 text-lg font-bold text-gray-800">Transaction Summary</h4>
-
-              <div class="mb-6 space-y-4">
-                <div class="flex justify-between text-gray-700">
-                  <span>Subtotal</span>
-                  <span>Rp <?php echo number_format($subtotal, 0, ',', '.'); ?></span>
-                </div>
-                <div class="flex justify-between pt-4 border-t border-gray-200">
-                  <span class="font-bold text-gray-800">Total</span>
-                  <span class="text-2xl font-bold text-blue-600">Rp <?php echo number_format($total, 0, ',', '.'); ?></span>
+            <div class="sticky top-8 bg-white rounded-lg shadow-md overflow-hidden">
+              <div class="bg-gradient-to-r from-blue-600 to-blue-700 p-6">
+                <div class="flex items-center gap-3">
+                  <i class="fas fa-calculator text-white text-2xl"></i>
+                  <h4 class="text-xl font-bold text-white">Summary</h4>
                 </div>
               </div>
 
-              <div class="bg-blue-50 p-4 rounded-lg">
-                <p class="mb-2 text-sm text-gray-600">Payment Method</p>
-                <select name="payment_type" form="transactionForm" class="focus:outline-none focus:ring-2 focus:ring-blue-600 w-full px-3 py-2 border border-gray-300 rounded-lg">
-                  <option value="Cash">Cash</option>
-                  <option value="Card">Card</option>
-                </select>
+              <div class="p-6">
+                <!-- Items Count -->
+                <div class="mb-6 p-4 bg-blue-50 rounded-lg border-l-4 border-blue-600">
+                  <p class="text-sm text-gray-600 font-semibold">Items in Cart</p>
+                  <p class="text-3xl font-bold text-blue-600"><?php echo count($_SESSION['cart']); ?></p>
+                </div>
+
+                <!-- Totals -->
+                <div class="space-y-4 mb-8">
+                  <div class="flex justify-between text-gray-700">
+                    <span class="font-semibold">Subtotal:</span>
+                    <span class="font-semibold">Rp <?php echo number_format($subtotal, 0, ',', '.'); ?></span>
+                  </div>
+                  <div class="pt-4 border-t-2 border-gray-200">
+                    <div class="flex justify-between">
+                      <span class="font-bold text-gray-800">Total Amount:</span>
+                      <span class="text-3xl font-bold text-green-600">Rp <?php echo number_format($total, 0, ',', '.'); ?></span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Payment Method -->
+                <div class="p-4 bg-gray-100 rounded-lg">
+                  <label class="block mb-2 text-sm font-bold text-gray-700 uppercase tracking-wide">
+                    <i class="fas fa-credit-card text-blue-600 mr-2"></i>Payment Method
+                  </label>
+                  <select name="payment_type" form="transactionForm" class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-600 transition font-medium">
+                    <option value="Cash">💵 Cash</option>
+                    <option value="Card">💳 Card</option>
+                  </select>
+                </div>
               </div>
             </div>
           </div>

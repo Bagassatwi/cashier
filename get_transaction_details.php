@@ -17,7 +17,7 @@ $transaction_id = intval($_GET['transaction_id']);
 // Get transaction info
 $trans_query = mysqli_query($conn, "
   SELECT t.transaction_id, c.customer_name, a.fullname as admin_name, t.transaction_date, 
-         SUM(td.subtotal) as total
+         SUM(td.subtotal) as total, COUNT(td.detail_id) as item_count
   FROM transactions t
   JOIN customers c ON t.customer_id = c.customer_id
   JOIN admins a ON t.admin_id = a.admin_id
@@ -28,7 +28,8 @@ $trans_query = mysqli_query($conn, "
 
 if (mysqli_num_rows($trans_query) == 0) {
   http_response_code(404);
-  exit('Transaction not found');
+  echo '<div class="text-center py-8"><i class="fas fa-exclamation-circle text-red-600 text-3xl mb-2"></i><p class="text-red-600 text-lg">Transaction not found</p></div>';
+  exit;
 }
 
 $transaction = mysqli_fetch_assoc($trans_query);
@@ -45,75 +46,100 @@ $details_query = mysqli_query($conn, "
   ORDER BY td.detail_id ASC
 ");
 
-echo '<div class="space-y-4">';
-
-// Transaction header info
-echo '<div class="grid grid-cols-2 gap-6 pb-4 border-b border-gray-200">';
-echo '<div>';
-echo '<p class="text-gray-600">Transaction ID</p>';
-echo '<p class="text-lg font-bold text-gray-800">TRX-' . htmlspecialchars($transId) . '</p>';
-echo '</div>';
-echo '<div>';
-echo '<p class="text-gray-600">Date & Time</p>';
-echo '<p class="text-lg font-bold text-gray-800">' . htmlspecialchars($date) . '</p>';
-echo '</div>';
-echo '<div>';
-echo '<p class="text-gray-600">Customer</p>';
-echo '<p class="text-lg font-bold text-gray-800">' . htmlspecialchars($transaction['customer_name']) . '</p>';
-echo '</div>';
-echo '<div>';
-echo '<p class="text-gray-600">Admin</p>';
-echo '<p class="text-lg font-bold text-gray-800">' . htmlspecialchars($transaction['admin_name']) . '</p>';
-echo '</div>';
-echo '</div>';
-
-// Items table
-echo '<div class="overflow-x-auto">';
-echo '<table class="w-full text-sm">';
-echo '<thead class="bg-gray-100 border-b border-gray-300">';
-echo '<tr>';
-echo '<th class="px-4 py-2 text-left text-lg font-semibold text-gray-700">Product</th>';
-echo '<th class="px-4 py-2 text-center text-lg font-semibold text-gray-700">Quantity</th>';
-echo '<th class="px-4 py-2 text-right font-semibold text-lg text-gray-700">Price</th>';
-echo '<th class="px-4 py-2 text-right font-semibold text-lg text-gray-700">Subtotal</th>';
-echo '</tr>';
-echo '</thead>';
-echo '<tbody class="divide-y divide-gray-200">';
-
-$itemCount = 0;
-while ($detail = mysqli_fetch_assoc($details_query)) {
-  $itemCount++;
-  echo '<tr class="*:text-lg hover:bg-gray-50">';
-  echo '<td class="px-4 py-3 font-medium text-gray-800">' . htmlspecialchars($detail['product_name']) . '</td>';
-  echo '<td class="px-4 py-3 text-center text-gray-700">' . $detail['quantity'] . '</td>';
-  echo '<td class="px-4 py-3 text-right text-gray-700">Rp ' . number_format($detail['price'], 0, ',', '.') . '</td>';
-  echo '<td class="px-4 py-3 text-right font-semibold text-gray-800">Rp ' . number_format($detail['subtotal'], 0, ',', '.') . '</td>';
-  echo '</tr>';
-}
-
-echo '</tbody>';
-echo '</table>';
-echo '</div>';
-
-// Summary
-echo '<div class="pt-4 text-lg border-t border-gray-200 space-y-2">';
-echo '<div class="flex justify-between text-gray-700">';
-echo '<span>Items:</span>';
-echo '<span class="font-semibold">' . $itemCount . '</span>';
-echo '</div>';
-echo '<div class="flex justify-between text-lg">';
-echo '<span class="font-bold text-gray-800">Total:</span>';
-echo '<span class="font-bold text-blue-600">Rp ' . number_format($total, 0, ',', '.') . '</span>';
-echo '</div>';
-
 // Get payment type from first detail
 $payment_query = mysqli_query($conn, "SELECT DISTINCT payment_type FROM transaction_details WHERE transaction_id = $transaction_id LIMIT 1");
-if ($payment_row = mysqli_fetch_assoc($payment_query)) {
-  echo '<div class="flex justify-between text-gray-700">';
-  echo '<span>Payment Method:</span>';
-  echo '<span class="font-semibold">' . htmlspecialchars($payment_row['payment_type']) . '</span>';
-  echo '</div>';
-}
+$payment_row = mysqli_fetch_assoc($payment_query);
+$payment_type = $payment_row['payment_type'] ?? 'Cash';
+?>
 
-echo '</div>';
-echo '</div>';
+<div class="space-y-6">
+  <!-- Transaction Header Info -->
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4 pb-6 border-b-2 border-gray-200">
+    <div class="bg-blue-50 p-4 rounded-lg">
+      <p class="text-sm font-semibold text-gray-600 mb-1">
+        <i class="fas fa-receipt text-blue-600 mr-2"></i>Transaction ID
+      </p>
+      <p class="text-lg font-bold text-gray-800">TRX-<?php echo htmlspecialchars($transId); ?></p>
+    </div>
+
+    <div class="bg-green-50 p-4 rounded-lg">
+      <p class="text-sm font-semibold text-gray-600 mb-1">
+        <i class="fas fa-calendar text-green-600 mr-2"></i>Date & Time
+      </p>
+      <p class="text-lg font-bold text-gray-800"><?php echo htmlspecialchars($date); ?></p>
+    </div>
+
+    <div class="bg-orange-50 p-4 rounded-lg">
+      <p class="text-sm font-semibold text-gray-600 mb-1">
+        <i class="fas fa-user text-orange-600 mr-2"></i>Customer
+      </p>
+      <p class="text-lg font-bold text-gray-800"><?php echo htmlspecialchars($transaction['customer_name']); ?></p>
+    </div>
+
+    <div class="bg-purple-50 p-4 rounded-lg">
+      <p class="text-sm font-semibold text-gray-600 mb-1">
+        <i class="fas fa-user-tie text-purple-600 mr-2"></i>Admin
+      </p>
+      <p class="text-lg font-bold text-gray-800"><?php echo htmlspecialchars($transaction['admin_name']); ?></p>
+    </div>
+  </div>
+
+  <!-- Items Table -->
+  <div class="bg-gray-50 rounded-lg overflow-hidden">
+    <div class="px-6 py-4 bg-gradient-to-r from-gray-600 to-gray-700 border-b-2 border-gray-800">
+      <h4 class="text-white font-bold text-lg">
+        <i class="fas fa-shopping-bag mr-2"></i>Items (<?php echo $transaction['item_count']; ?>)
+      </h4>
+    </div>
+
+    <table class="w-full">
+      <thead class="bg-gray-100 border-b border-gray-300">
+        <tr>
+          <th class="px-6 py-3 text-left font-bold text-gray-700 text-sm">Product</th>
+          <th class="px-6 py-3 text-center font-bold text-gray-700 text-sm">Qty</th>
+          <th class="px-6 py-3 text-right font-bold text-gray-700 text-sm">Price</th>
+          <th class="px-6 py-3 text-right font-bold text-gray-700 text-sm">Subtotal</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-200">
+        <?php
+        $row_count = 0;
+        while ($detail = mysqli_fetch_assoc($details_query)) {
+          $row_count++;
+          $bg_class = ($row_count % 2 == 0) ? 'bg-white' : 'bg-gray-50';
+        ?>
+          <tr class="<?php echo $bg_class; ?> hover:bg-blue-50 transition">
+            <td class="px-6 py-4 font-medium text-gray-800"><?php echo htmlspecialchars($detail['product_name']); ?></td>
+            <td class="px-6 py-4 text-center text-gray-700 font-semibold"><?php echo $detail['quantity']; ?></td>
+            <td class="px-6 py-4 text-right text-gray-700">Rp <?php echo number_format($detail['price'], 0, ',', '.'); ?></td>
+            <td class="px-6 py-4 text-right font-bold text-gray-800">Rp <?php echo number_format($detail['subtotal'], 0, ',', '.'); ?></td>
+          </tr>
+        <?php } ?>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Summary Section -->
+  <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+    <div class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-600">
+      <p class="text-sm text-gray-600 mb-1 font-semibold">
+        <i class="fas fa-box text-blue-600 mr-2"></i>Items
+      </p>
+      <p class="text-2xl font-bold text-gray-800"><?php echo $transaction['item_count']; ?></p>
+    </div>
+
+    <div class="bg-green-50 p-4 rounded-lg border-l-4 border-green-600">
+      <p class="text-sm text-gray-600 mb-1 font-semibold">
+        <i class="fas fa-credit-card text-green-600 mr-2"></i>Payment
+      </p>
+      <p class="text-2xl font-bold text-gray-800"><?php echo htmlspecialchars($payment_type); ?></p>
+    </div>
+
+    <div class="bg-gradient-to-br from-blue-500 to-blue-600 p-4 rounded-lg col-span-2 md:col-span-1 md:order-last">
+      <p class="text-sm text-blue-100 mb-1 font-semibold">
+        <i class="fas fa-receipt text-blue-200 mr-2"></i>Total
+      </p>
+      <p class="text-3xl font-bold text-white">Rp <?php echo number_format($total, 0, ',', '.'); ?></p>
+    </div>
+  </div>
+</div>

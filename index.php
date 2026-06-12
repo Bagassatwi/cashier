@@ -53,63 +53,87 @@ $recentTrans = mysqli_query($conn, "
       <!-- Content -->
       <div class="p-8">
         <!-- Stats Cards -->
-        <div class="grid grid-cols-4 gap-6 mb-8">
-          <div class="flex items-center gap-4 p-6 bg-white rounded-lg shadow">
-            <div class="flex items-center justify-center w-12 h-12 text-2xl bg-blue-100 rounded-lg">
-              <i class="fas fa-box text-blue-600"></i>
-            </div>
-            <div>
-              <p class="text-sm text-gray-600">Total Products</p>
-              <p class="text-3xl font-bold text-gray-800"><?php echo $totalProducts; ?></p>
-            </div>
-          </div>
-
-          <div class="flex items-center gap-4 p-6 bg-white rounded-lg shadow">
-            <div class="flex items-center justify-center w-12 h-12 text-2xl bg-green-100 rounded-lg">
-              <i class="fas fa-users text-green-600"></i>
-            </div>
-            <div>
-              <p class="text-sm text-gray-600">Total Customers</p>
-              <p class="text-3xl font-bold text-gray-800"><?php echo $totalCustomers; ?></p>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
+            <div class="p-6">
+              <div class="flex items-center justify-between mb-4">
+                <h3 class="text-sm font-semibold text-gray-600 uppercase tracking-wide">Total Products</h3>
+                <div class="p-3 bg-blue-600 text-white rounded-lg">
+                  <i class="fas fa-box text-lg"></i>
+                </div>
+              </div>
+              <p class="text-4xl font-bold text-gray-800"><?php echo $totalProducts; ?></p>
+              <p class="text-xs text-gray-500 mt-2">
+                <i class="fas fa-check-circle text-green-600 mr-1"></i>Active items
+              </p>
             </div>
           </div>
 
-          <div class="flex items-center gap-4 p-6 bg-white rounded-lg shadow">
-            <div class="flex items-center justify-center w-12 h-12 text-2xl bg-orange-100 rounded-lg">
-              <i class="fas fa-exchange-alt text-orange-600"></i>
-            </div>
-            <div>
-              <p class="text-sm text-gray-600">Total Transactions</p>
-              <p class="text-3xl font-bold text-gray-800"><?php echo $totalTransactions; ?></p>
+          <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
+            <div class="p-6">
+              <div class="flex items-center justify-between mb-4">
+                <h3 class="text-sm font-semibold text-gray-600 uppercase tracking-wide">Total Customers</h3>
+                <div class="p-3 bg-green-600 text-white rounded-lg">
+                  <i class="fas fa-users text-lg"></i>
+                </div>
+              </div>
+              <p class="text-4xl font-bold text-gray-800"><?php echo $totalCustomers; ?></p>
+              <p class="text-xs text-gray-500 mt-2">
+                <i class="fas fa-user-plus text-green-600 mr-1"></i>Registered
+              </p>
             </div>
           </div>
 
-          <div class="flex items-center gap-4 p-6 bg-white rounded-lg shadow">
-            <div class="flex items-center justify-center w-12 h-12 text-2xl bg-purple-100 rounded-lg">
-              <i class="fas fa-money-bill-wave text-purple-600"></i>
+          <div class="bg-gradient-to-br from-orange-50 to-orange-100 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
+            <div class="p-6">
+              <div class="flex items-center justify-between mb-4">
+                <h3 class="text-sm font-semibold text-gray-600 uppercase tracking-wide">Total Transactions</h3>
+                <div class="p-3 bg-orange-600 text-white rounded-lg">
+                  <i class="fas fa-exchange-alt text-lg"></i>
+                </div>
+              </div>
+              <p class="text-4xl font-bold text-gray-800"><?php echo $totalTransactions; ?></p>
+              <p class="text-xs text-gray-500 mt-2">
+                <i class="fas fa-history text-orange-600 mr-1"></i>Completed
+              </p>
             </div>
-            <div>
-              <p class="text-sm text-gray-600">Total Sales</p>
+          </div>
+
+          <div class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
+            <div class="p-6">
+              <div class="flex items-center justify-between mb-4">
+                <h3 class="text-sm font-semibold text-gray-600 uppercase tracking-wide">Total Sales</h3>
+                <div class="p-3 bg-purple-600 text-white rounded-lg">
+                  <i class="fas fa-money-bill-wave text-lg"></i>
+                </div>
+              </div>
               <p class="text-3xl font-bold text-gray-800">Rp <?php echo number_format($totalSales, 0, ',', '.'); ?></p>
+              <p class="text-xs text-gray-500 mt-2">
+                <i class="fas fa-chart-line text-purple-600 mr-1"></i>Revenue
+              </p>
             </div>
           </div>
         </div>
 
         <!-- Recent Transactions -->
-        <div class="bg-white rounded-lg shadow">
-          <div class="p-6 border-b border-gray-200">
-            <h3 class="text-lg font-semibold text-gray-800">Recent Transactions</h3>
+        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+          <div class="bg-gradient-to-r from-gray-700 to-gray-800 p-6 border-b border-gray-300">
+            <div class="flex items-center gap-3">
+              <i class="fas fa-history text-white text-2xl"></i>
+              <h3 class="text-xl font-bold text-white">Recent Transactions</h3>
+              <span class="ml-auto text-gray-300 text-sm"><?php echo $totalTransactions; ?> total</span>
+            </div>
           </div>
           <div class="overflow-x-auto">
-            <table class="w-full text-sm text-left text-gray-600">
-              <thead class="bg-gray-50 border-b border-gray-200">
-                <tr class="*:text-xl">
-                  <th class="px-6 py-3 font-semibold text-gray-700">No</th>
-                  <th class="px-6 py-3 font-semibold text-gray-700">Transaction ID</th>
-                  <th class="px-6 py-3 font-semibold text-gray-700">Customer</th>
-                  <th class="px-6 py-3 font-semibold text-gray-700">Date</th>
-                  <th class="px-6 py-3 font-semibold text-gray-700">Total</th>
-                  <th class="px-6 py-3 font-semibold text-gray-700">Action</th>
+            <table class="w-full">
+              <thead class="bg-gray-100 border-b-2 border-gray-300">
+                <tr>
+                  <th class="px-6 py-4 text-left font-bold text-gray-700 text-sm uppercase tracking-wide">No</th>
+                  <th class="px-6 py-4 text-left font-bold text-gray-700 text-sm uppercase tracking-wide">Transaction ID</th>
+                  <th class="px-6 py-4 text-left font-bold text-gray-700 text-sm uppercase tracking-wide">Customer</th>
+                  <th class="px-6 py-4 text-left font-bold text-gray-700 text-sm uppercase tracking-wide">Date & Time</th>
+                  <th class="px-6 py-4 text-right font-bold text-gray-700 text-sm uppercase tracking-wide">Total</th>
+                  <th class="px-6 py-4 text-center font-bold text-gray-700 text-sm uppercase tracking-wide">Action</th>
                 </tr>
               </thead>
               <tbody class="divide-y divide-gray-200">
@@ -118,15 +142,18 @@ $recentTrans = mysqli_query($conn, "
                 while ($row = mysqli_fetch_assoc($recentTrans)) {
                   $transId = str_pad($row['transaction_id'], 5, '0', STR_PAD_LEFT);
                   $date = date('d/m/Y H:i', strtotime($row['transaction_date']));
+                  $bg_class = ($no % 2 == 0) ? 'bg-white' : 'bg-gray-50';
                 ?>
-                  <tr class="hover:bg-gray-50 *:text-lg">
-                    <td class="px-6 py-4"><?php echo $no++; ?></td>
-                    <td class="px-6 py-4">TRX-<?php echo $transId; ?></td>
-                    <td class="px-6 py-4"><?php echo htmlspecialchars($row['customer_name']); ?></td>
-                    <td class="px-6 py-4"><?php echo $date; ?></td>
-                    <td class="px-6 py-4 font-semibold">Rp <?php echo number_format($row['total'], 0, ',', '.'); ?></td>
-                    <td class="px-6 py-4">
-                      <button onclick="viewTransactionDetails(<?php echo $row['transaction_id']; ?>)" class="hover:bg-blue-700 p-6 py-1 text-white bg-blue-600 rounded">View</button>
+                  <tr class="<?php echo $bg_class; ?> hover:bg-blue-50 transition">
+                    <td class="px-6 py-4 font-semibold text-gray-700"><?php echo $no++; ?></td>
+                    <td class="px-6 py-4 font-bold text-blue-600">TRX-<?php echo $transId; ?></td>
+                    <td class="px-6 py-4 text-gray-800"><?php echo htmlspecialchars($row['customer_name']); ?></td>
+                    <td class="px-6 py-4 text-gray-700"><?php echo $date; ?></td>
+                    <td class="px-6 py-4 font-bold text-green-600 text-right">Rp <?php echo number_format($row['total'], 0, ',', '.'); ?></td>
+                    <td class="px-6 py-4 text-center">
+                      <button onclick="viewTransactionDetails(<?php echo $row['transaction_id']; ?>)" class="inline-flex items-center gap-2 px-4 py-2 text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition font-semibold">
+                        <i class="fas fa-eye"></i>View
+                      </button>
                     </td>
                   </tr>
                 <?php } ?>
@@ -140,23 +167,26 @@ $recentTrans = mysqli_query($conn, "
 
   <!-- Transaction Details Modal -->
   <div id="transactionModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-    <div class="bg-white rounded-lg shadow-lg w-2/3 overflow-y-auto p-12">
-      <div class="flex items-center justify-between mb-4">
-        <h3 class="text-2xl font-bold text-gray-800">Transaction Details</h3>
-        <button onclick="closeTransactionModal()" class="text-gray-500 hover:text-gray-700">
-          <i class="fas fa-times text-xl"></i>
+    <div class="bg-white rounded-lg shadow-2xl w-11/12 md:w-4/5 lg:w-3/4 overflow-y-auto">
+      <div class="sticky top-0 bg-gradient-to-r from-blue-600 to-blue-700 p-6 flex items-center justify-between border-b border-blue-800">
+        <div class="flex items-center gap-3">
+          <i class="fas fa-receipt text-white text-2xl"></i>
+          <h3 class="text-2xl font-bold text-white">Transaction Details</h3>
+        </div>
+        <button onclick="closeTransactionModal()" class="text-blue-100 hover:text-white transition">
+          <i class="fas fa-times text-2xl"></i>
         </button>
       </div>
 
-      <div id="transactionContent">
-        <div class="text-center text-gray-500 py-8">
-          <i class="fas fa-spinner fa-spin text-2xl mb-2"></i>
-          <p>Loading...</p>
+      <div id="transactionContent" class="p-8">
+        <div class="text-center text-gray-500 py-12">
+          <i class="fas fa-spinner fa-spin text-4xl mb-3 text-blue-400"></i>
+          <p class="text-lg">Loading transaction details...</p>
         </div>
       </div>
 
-      <div class="flex gap-3 mt-6 pt-4 border-t border-gray-200">
-        <button onclick="closeTransactionModal()" class="flex-1 px-4 py-2 font-semibold text-gray-700 border-2 border-gray-300 rounded-lg hover:bg-gray-100">
+      <div class="flex gap-3 p-6 border-t border-gray-200 bg-gray-50">
+        <button onclick="closeTransactionModal()" class="flex-1 px-4 py-2.5 font-semibold text-gray-700 border-2 border-gray-300 rounded-lg hover:bg-gray-100 transition duration-200">
           Close
         </button>
       </div>
