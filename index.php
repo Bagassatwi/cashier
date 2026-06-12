@@ -103,7 +103,7 @@ $recentTrans = mysqli_query($conn, "
           <div class="overflow-x-auto">
             <table class="w-full text-sm text-left text-gray-600">
               <thead class="bg-gray-50 border-b border-gray-200">
-                <tr>
+                <tr class="*:text-xl">
                   <th class="px-6 py-3 font-semibold text-gray-700">No</th>
                   <th class="px-6 py-3 font-semibold text-gray-700">Transaction ID</th>
                   <th class="px-6 py-3 font-semibold text-gray-700">Customer</th>
@@ -119,14 +119,14 @@ $recentTrans = mysqli_query($conn, "
                   $transId = str_pad($row['transaction_id'], 5, '0', STR_PAD_LEFT);
                   $date = date('d/m/Y H:i', strtotime($row['transaction_date']));
                 ?>
-                  <tr class="hover:bg-gray-50">
+                  <tr class="hover:bg-gray-50 *:text-lg">
                     <td class="px-6 py-4"><?php echo $no++; ?></td>
                     <td class="px-6 py-4">TRX-<?php echo $transId; ?></td>
                     <td class="px-6 py-4"><?php echo htmlspecialchars($row['customer_name']); ?></td>
                     <td class="px-6 py-4"><?php echo $date; ?></td>
                     <td class="px-6 py-4 font-semibold">Rp <?php echo number_format($row['total'], 0, ',', '.'); ?></td>
                     <td class="px-6 py-4">
-                      <button class="hover:bg-blue-700 px-3 py-1 text-xs text-white bg-blue-600 rounded">View</button>
+                      <button onclick="viewTransactionDetails(<?php echo $row['transaction_id']; ?>)" class="hover:bg-blue-700 p-6 py-1 text-white bg-blue-600 rounded">View</button>
                     </td>
                   </tr>
                 <?php } ?>
@@ -137,6 +137,61 @@ $recentTrans = mysqli_query($conn, "
       </div>
     </main>
   </div>
+
+  <!-- Transaction Details Modal -->
+  <div id="transactionModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+    <div class="bg-white rounded-lg shadow-lg w-2/3 overflow-y-auto p-12">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-2xl font-bold text-gray-800">Transaction Details</h3>
+        <button onclick="closeTransactionModal()" class="text-gray-500 hover:text-gray-700">
+          <i class="fas fa-times text-xl"></i>
+        </button>
+      </div>
+
+      <div id="transactionContent">
+        <div class="text-center text-gray-500 py-8">
+          <i class="fas fa-spinner fa-spin text-2xl mb-2"></i>
+          <p>Loading...</p>
+        </div>
+      </div>
+
+      <div class="flex gap-3 mt-6 pt-4 border-t border-gray-200">
+        <button onclick="closeTransactionModal()" class="flex-1 px-4 py-2 font-semibold text-gray-700 border-2 border-gray-300 rounded-lg hover:bg-gray-100">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function viewTransactionDetails(transactionId) {
+      const modal = document.getElementById('transactionModal');
+      const content = document.getElementById('transactionContent');
+      modal.classList.remove('hidden');
+
+      // Fetch transaction details
+      fetch('get_transaction_details.php?transaction_id=' + transactionId)
+        .then(response => response.text())
+        .then(data => {
+          content.innerHTML = data;
+        })
+        .catch(error => {
+          content.innerHTML = '<div class="text-red-600 text-center py-8">Error loading transaction details</div>';
+          console.error('Error:', error);
+        });
+    }
+
+    function closeTransactionModal() {
+      document.getElementById('transactionModal').classList.add('hidden');
+    }
+
+    // Close modal when clicking outside
+    document.getElementById('transactionModal').addEventListener('click', function(e) {
+      if (e.target === this) {
+        closeTransactionModal();
+      }
+    });
+  </script>
 </body>
 
 </html>
