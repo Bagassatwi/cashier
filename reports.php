@@ -8,15 +8,15 @@ $page = $title = 'reports';
 include './connect.php';
 
 // Get filter dates
-$from_date = isset($_GET['from_date']) ? $_GET['from_date'] : date('Y-m-01');
-$to_date = isset($_GET['to_date']) ? $_GET['to_date'] : date('Y-m-d');
+$from_date = $_GET['from_date'] ?? date('Y-m-01');
+$to_date = $_GET['to_date'] ?? date('Y-m-d');
 
 // Build query
 $query = "
-  SELECT t.transaction_id, c.customer_name, t.transaction_date, 
+  SELECT t.transaction_id, c.store_name, t.transaction_date, 
          SUM(td.subtotal) as total
   FROM transactions t
-  JOIN customers c ON t.customer_id = c.customer_id
+  JOIN store c ON t.store_id = c.store_id
   JOIN transaction_details td ON t.transaction_id = td.transaction_id
   WHERE DATE(t.transaction_date) >= ? AND DATE(t.transaction_date) <= ?
   GROUP BY t.transaction_id
@@ -169,7 +169,7 @@ $average_transaction = $total_transactions > 0 ? $total_sales / $total_transacti
                 <tr>
                   <th class="px-6 py-4 text-left font-bold text-gray-700 text-sm uppercase tracking-wide">No</th>
                   <th class="px-6 py-4 text-left font-bold text-gray-700 text-sm uppercase tracking-wide">Transaction ID</th>
-                  <th class="px-6 py-4 text-left font-bold text-gray-700 text-sm uppercase tracking-wide">Customer</th>
+                  <th class="px-6 py-4 text-left font-bold text-gray-700 text-sm uppercase tracking-wide">store</th>
                   <th class="px-6 py-4 text-left font-bold text-gray-700 text-sm uppercase tracking-wide">Date & Time</th>
                   <th class="px-6 py-4 text-right font-bold text-gray-700 text-sm uppercase tracking-wide">Total</th>
                 </tr>
@@ -185,7 +185,7 @@ $average_transaction = $total_transactions > 0 ? $total_sales / $total_transacti
                   <tr class="<?php echo $bg_class; ?> hover:bg-blue-50 transition">
                     <td class="px-6 py-4 font-semibold text-gray-700"><?php echo $no++; ?></td>
                     <td class="px-6 py-4 font-bold text-blue-600">TRX-<?php echo $transId; ?></td>
-                    <td class="px-6 py-4 text-gray-800"><?php echo htmlspecialchars($row['customer_name']); ?></td>
+                    <td class="px-6 py-4 text-gray-800"><?php echo htmlspecialchars($row['store_name']); ?></td>
                     <td class="px-6 py-4 text-gray-700"><?php echo $date; ?></td>
                     <td class="px-6 py-4 font-bold text-green-600 text-right">Rp <?php echo number_format($row['total'], 0, ',', '.'); ?></td>
                   </tr>

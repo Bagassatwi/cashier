@@ -8,7 +8,7 @@ A simple web-based cashier system built with HTML, Tailwind CSS, and PHP. This i
 cashier/
 ├── index.php          # Dashboard/Homepage
 ├── products.php       # Product Management
-├── customers.php      # Customer Management
+├── stores.php      # store Management
 ├── transactions.php   # New Transaction Form
 ├── reports.php        # Transaction History & Reports
 ├── admin.php          # Admin Settings
@@ -21,7 +21,7 @@ cashier/
 ### 1. **Dashboard** (index.php)
 - Overview with key statistics:
   - Total Products
-  - Total Customers
+  - Total stores
   - Total Transactions
   - Total Sales
 - Recent transactions table
@@ -34,16 +34,16 @@ cashier/
 - Edit/Delete actions for each product
 - Displays: Product Name, Price, Stock
 
-### 3. **Customers Management** (customers.php)
-- View all customers
+### 3. **stores Management** (stores.php)
+- View all stores
 - Search functionality
-- Add new customer button
-- Edit/Delete actions for each customer
-- Displays: Customer Name, Phone Number
+- Add new store button
+- Edit/Delete actions for each store
+- Displays: store Name, Phone Number
 
 ### 4. **Transactions** (transactions.php)
 - Create new transactions
-- Select customer and transaction date
+- Select store and transaction date
 - Add multiple products with quantity
 - Real-time calculation of subtotal and total
 - Transaction summary sidebar
@@ -93,7 +93,7 @@ cashier/
 1. Replace mock data with database queries
 2. Implement CRUD operations for:
    - Products (create, read, update, delete)
-   - Customers (create, read, update, delete)
+   - stores (create, read, update, delete)
    - Transactions (create, read)
 3. Add form submission handling and validation
 4. Implement user authentication
@@ -112,8 +112,8 @@ cashier/
 1. Set up a database (MySQL/MariaDB recommended)
 2. Create necessary tables:
    - `products` (id, name, price, stock)
-   - `customers` (id, name, phone, email)
-   - `transactions` (id, customer_id, date, total)
+   - `stores` (id, name, phone, email)
+   - `transactions` (id, store_id, date, total)
    - `transaction_items` (id, transaction_id, product_id, quantity, price)
    - `users` (id, username, password, email, role)
 

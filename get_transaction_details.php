@@ -16,10 +16,10 @@ $transaction_id = intval($_GET['transaction_id']);
 
 // Get transaction info
 $trans_query = mysqli_query($conn, "
-  SELECT t.transaction_id, c.customer_name, a.fullname as admin_name, t.transaction_date, 
+  SELECT t.transaction_id, c.store_name, a.fullname as admin_name, t.transaction_date, 
          SUM(td.subtotal) as total, COUNT(td.detail_id) as item_count
   FROM transactions t
-  JOIN customers c ON t.customer_id = c.customer_id
+  JOIN stores c ON t.store_id = c.store_id
   JOIN admins a ON t.admin_id = a.admin_id
   JOIN transaction_details td ON t.transaction_id = td.transaction_id
   WHERE t.transaction_id = $transaction_id
@@ -71,9 +71,9 @@ $payment_type = $payment_row['payment_type'] ?? 'Cash';
 
     <div class="bg-orange-50 p-4 rounded-lg">
       <p class="text-sm font-semibold text-gray-600 mb-1">
-        <i class="fas fa-user text-orange-600 mr-2"></i>Customer
+        <i class="fas fa-user text-orange-600 mr-2"></i>store
       </p>
-      <p class="text-lg font-bold text-gray-800"><?php echo htmlspecialchars($transaction['customer_name']); ?></p>
+      <p class="text-lg font-bold text-gray-800"><?php echo htmlspecialchars($transaction['store_name']); ?></p>
     </div>
 
     <div class="bg-purple-50 p-4 rounded-lg">

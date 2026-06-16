@@ -9,16 +9,16 @@ include './connect.php';
 
 // Get statistics
 $totalProducts = mysqli_fetch_array(mysqli_query($conn, "SELECT COUNT(*) as count FROM products"))['count'];
-$totalCustomers = mysqli_fetch_array(mysqli_query($conn, "SELECT COUNT(*) as count FROM customers"))['count'];
+$totalstores = mysqli_fetch_array(mysqli_query($conn, "SELECT COUNT(*) as count from store"))['count'];
 $totalTransactions = mysqli_fetch_array(mysqli_query($conn, "SELECT COUNT(*) as count FROM transactions"))['count'];
 $totalSales = mysqli_fetch_array(mysqli_query($conn, "SELECT SUM(subtotal) as total FROM transaction_details"))['total'] ?? 0;
 
 // Get recent transactions
 $recentTrans = mysqli_query($conn, "
-  SELECT t.transaction_id, c.customer_name, t.transaction_date, 
+  SELECT t.transaction_id, c.store_name, t.transaction_date, 
          SUM(td.subtotal) as total
   FROM transactions t
-  JOIN customers c ON t.customer_id = c.customer_id
+  JOIN store c ON t.store_id = c.store_id
   JOIN transaction_details td ON t.transaction_id = td.transaction_id
   GROUP BY t.transaction_id
   ORDER BY t.transaction_date DESC
@@ -72,12 +72,12 @@ $recentTrans = mysqli_query($conn, "
           <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
             <div class="p-6">
               <div class="flex items-center justify-between mb-4">
-                <h3 class="text-sm font-semibold text-gray-600 uppercase tracking-wide">Total Customers</h3>
+                <h3 class="text-sm font-semibold text-gray-600 uppercase tracking-wide">Total stores</h3>
                 <div class="p-3 bg-green-600 text-white rounded-lg">
                   <i class="fas fa-users text-lg"></i>
                 </div>
               </div>
-              <p class="text-4xl font-bold text-gray-800"><?php echo $totalCustomers; ?></p>
+              <p class="text-4xl font-bold text-gray-800"><?php echo $totalstores; ?></p>
               <p class="text-xs text-gray-500 mt-2">
                 <i class="fas fa-user-plus text-green-600 mr-1"></i>Registered
               </p>
@@ -130,7 +130,7 @@ $recentTrans = mysqli_query($conn, "
                 <tr>
                   <th class="px-6 py-4 text-left font-bold text-gray-700 text-sm uppercase tracking-wide">No</th>
                   <th class="px-6 py-4 text-left font-bold text-gray-700 text-sm uppercase tracking-wide">Transaction ID</th>
-                  <th class="px-6 py-4 text-left font-bold text-gray-700 text-sm uppercase tracking-wide">Customer</th>
+                  <th class="px-6 py-4 text-left font-bold text-gray-700 text-sm uppercase tracking-wide">store</th>
                   <th class="px-6 py-4 text-left font-bold text-gray-700 text-sm uppercase tracking-wide">Date & Time</th>
                   <th class="px-6 py-4 text-right font-bold text-gray-700 text-sm uppercase tracking-wide">Total</th>
                   <th class="px-6 py-4 text-center font-bold text-gray-700 text-sm uppercase tracking-wide">Action</th>
@@ -147,7 +147,7 @@ $recentTrans = mysqli_query($conn, "
                   <tr class="<?php echo $bg_class; ?> hover:bg-blue-50 transition">
                     <td class="px-6 py-4 font-semibold text-gray-700"><?php echo $no++; ?></td>
                     <td class="px-6 py-4 font-bold text-blue-600">TRX-<?php echo $transId; ?></td>
-                    <td class="px-6 py-4 text-gray-800"><?php echo htmlspecialchars($row['customer_name']); ?></td>
+                    <td class="px-6 py-4 text-gray-800"><?php echo htmlspecialchars($row['store_name']); ?></td>
                     <td class="px-6 py-4 text-gray-700"><?php echo $date; ?></td>
                     <td class="px-6 py-4 font-bold text-green-600 text-right">Rp <?php echo number_format($row['total'], 0, ',', '.'); ?></td>
                     <td class="px-6 py-4 text-center">

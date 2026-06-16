@@ -67,11 +67,11 @@ if (isset($_GET['remove_cart'])) {
 
 // Handle Save Transaction
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['action'] == 'save_transaction') {
-  $customer_id = intval($_POST['customer_id']);
+  $store_id = intval($_POST['store_id']);
   $payment_type = htmlspecialchars($_POST['payment_type'] ?? 'Cash');
 
-  if (empty($customer_id)) {
-    $error = "Please select a customer!";
+  if (empty($store_id)) {
+    $error = "Please select a store!";
   } elseif (count($_SESSION['cart']) == 0) {
     $error = "Cart is empty!";
   } else {
@@ -81,9 +81,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
       $admin_id = $_SESSION['id_admin'];
 
       // Insert transaction
-      $insert_trans = "INSERT INTO transactions (customer_id, admin_id, transaction_date) VALUES (?, ?, NOW())";
+      $insert_trans = "INSERT INTO transactions (store_id, admin_id, transaction_date) VALUES (?, ?, NOW())";
       $stmt = $conn->prepare($insert_trans);
-      $stmt->bind_param("ii", $customer_id, $admin_id);
+      $stmt->bind_param("ii", $store_id, $admin_id);
       $stmt->execute();
       $transaction_id = $conn->insert_id;
       $stmt->close();
@@ -119,8 +119,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
   }
 }
 
-// Get customers for dropdown
-$customers = mysqli_query($conn, "SELECT * FROM customers ORDER BY customer_name ASC");
+// Get stores for dropdown
+$stores = mysqli_query($conn, "SELECT * from store ORDER BY store_name ASC");
 
 // Get products for dropdown
 $products = mysqli_query($conn, "SELECT * FROM products WHERE stock > 0 ORDER BY product_name ASC");
@@ -189,15 +189,15 @@ $total = $subtotal;
 
               <div class="p-8">
                 <form method="POST" id="transactionForm">
-                  <!-- Customer Selection -->
+                  <!-- store Selection -->
                   <div class="mb-8">
                     <label class="block mb-3 text-sm font-bold text-gray-700 uppercase tracking-wide">
-                      <i class="fas fa-user text-blue-600 mr-2"></i>Select Customer
+                      <i class="fas fa-user text-blue-600 mr-2"></i>Select store
                     </label>
-                    <select name="customer_id" id="customer_id" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-600 transition font-medium" required>
-                      <option value="">-- Choose a customer --</option>
-                      <?php while ($customer = mysqli_fetch_assoc($customers)) { ?>
-                        <option value="<?php echo $customer['customer_id']; ?>"><?php echo htmlspecialchars($customer['customer_name']); ?></option>
+                    <select name="store_id" id="store_id" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-600 transition font-medium" required>
+                      <option value="">-- Choose a store --</option>
+                      <?php while ($store = mysqli_fetch_assoc($stores)) { ?>
+                        <option value="<?php echo $store['store_id']; ?>"><?php echo htmlspecialchars($store['store_name']); ?></option>
                       <?php } ?>
                     </select>
                   </div>
@@ -365,9 +365,9 @@ $total = $subtotal;
   }
 
   function saveTrans() {
-    const customerId = document.getElementById('customer_id').value;
-    if (!customerId) {
-      alert('Please select a customer!');
+    const storeId = document.getElementById('store_id').value;
+    if (!storeId) {
+      alert('Please select a store!');
       return false;
     }
     return true;

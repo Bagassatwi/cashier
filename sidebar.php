@@ -1,5 +1,3 @@
-<?php ?>
-
 <aside class="w-64 max-h-screen sticky top-0 text-white bg-gray-900 shadow-lg">
   <div class="p-6 border-b border-gray-700">
     <h1 class="flex items-center gap-2 text-2xl font-bold">
@@ -12,9 +10,6 @@
     </a>
     <a href="products.php" class="flex items-center gap-3 px-4 py-3 rounded-lg <?php echo $page == 'products' ? 'bg-blue-600 text-white' : 'hover:bg-gray-800 transition'; ?>">
       <i class="fas fa-box w-5"></i> Products
-    </a>
-    <a href="customers.php" class="flex items-center gap-3 px-4 py-3 rounded-lg <?php echo $page == 'customers' ? 'bg-blue-600 text-white' : 'hover:bg-gray-800 transition'; ?>">
-      <i class="fas fa-users w-5"></i> Customers
     </a>
     <a href="transactions.php" class="flex items-center gap-3 px-4 py-3 rounded-lg <?php echo $page == 'transactions' ? 'bg-blue-600 text-white' : 'hover:bg-gray-800 transition'; ?>">
       <i class="fas fa-exchange-alt w-5"></i> Transactions
