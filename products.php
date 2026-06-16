@@ -6,19 +6,19 @@ if (empty($_SESSION['status_login'])) {
 }
 $page = $title = 'products';
 include './connect.php';
+include './controllers/ProductsController.php';
+include './models/Products.php';
+$PC = new ProductsController();
 
 // Handle Delete
 if (isset($_GET['delete'])) {
   $product_id = intval($_GET['delete']);
-  $delete_query = "DELETE FROM products WHERE product_id = ?";
-  $stmt = $conn->prepare($delete_query);
-  $stmt->bind_param("i", $product_id);
-  if ($stmt->execute()) {
+  $res = $PC->delete($product_id);
+  if ($res === true) {
     echo "<script>alert('Product deleted successfully!');location.href='products.php';</script>";
   } else {
     echo "<script>alert('Error deleting product!');location.href='products.php';</script>";
   }
-  $stmt->close();
 }
 
 // Handle Add Product
@@ -32,16 +32,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
   } elseif ($price <= 0) {
     $error = "Price must be greater than 0!";
   } else {
-    $insert_query = "INSERT INTO products (product_name, price, stock) VALUES (?, ?, ?)";
-    $stmt = $conn->prepare($insert_query);
-    $stmt->bind_param("sdi", $product_name, $price, $stock);
-    if ($stmt->execute()) {
+    $ProductToSave = new Product($product_name, $price, $stock);
+    $res = $PC->save($ProductToSave);
+    if ($res === true) {
       echo "<script>alert('Product added successfully!');location.href='products.php';</script>";
       exit();
     } else {
-      $error = "Error adding product: " . $stmt->error;
+      $error = "Error adding product: $res";
     }
-    $stmt->close();
   }
 }
 
@@ -57,16 +55,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
   } elseif ($price <= 0) {
     $error = "Price must be greater than 0!";
   } else {
-    $update_query = "UPDATE products SET product_name = ?, price = ?, stock = ? WHERE product_id = ?";
-    $stmt = $conn->prepare($update_query);
-    $stmt->bind_param("sdii", $product_name, $price, $stock, $product_id);
-    if ($stmt->execute()) {
-      echo "<script>alert('Product updated successfully!');location.href='products.php';</script>";
+    $ProductToSave = new Product($product_name, $price, $stock, $product_id);
+    $res = $PC->save($ProductToSave);
+    if ($res === true) {
+      echo "<script>alert('Product Edited Successfully!');location.href='products.php';</script>";
       exit();
     } else {
-      $error = "Error updating product: " . $stmt->error;
+      $error = "Error Editing Product: $res";
     }
-    $stmt->close();
   }
 }
 
@@ -169,7 +165,7 @@ if (isset($_GET['edit'])) {
                   <tr class="<?php echo $bg_class; ?> hover:bg-blue-50 transition">
                     <td class="px-6 py-4 font-semibold text-gray-700"><?php echo $no++; ?></td>
                     <td class="px-6 py-4 font-medium text-gray-800"><?php echo htmlspecialchars($row['product_name']); ?></td>
-                    <td class="px-6 py-4 text-center font-bold text-green-600">Rp <?php echo number_format($row['price'], 0, ',', '.'); ?></td>
+                    <td class="px-6 py-4 text-center font-bold text-green-600">Rp <?php echo number_format((int)$row['price'], 0, ',', '.'); ?></td>
                     <td class="px-6 py-4 text-center">
                       <span class="inline-block px-3 py-1 rounded-full text-sm font-semibold <?php echo $stock_status; ?>">
                         <?php echo $row['stock']; ?> units
