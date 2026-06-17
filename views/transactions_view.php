@@ -40,8 +40,8 @@
             <div class="bg-white rounded-lg shadow-md overflow-hidden">
               <div class="bg-linear-to-r from-gray-700 to-gray-800 p-6 border-b border-gray-300">
                 <div class="flex items-center gap-3">
-                  <i class="fas fa-shopping-cart text-white text-2xl"></i>
-                  <h3 class="text-xl font-bold text-white">Transaction Details</h3>
+                  <i class="fas fa-shopping-cart text-black text-2xl"></i>
+                  <h3 class="text-xl font-bold text-black">Transaction Details</h3>
                 </div>
               </div>
 

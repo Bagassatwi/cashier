@@ -1,5 +1,8 @@
 <?php
 session_start();
+if (!$_SESSION['cart']) {
+  $_SESSION['cart'] = [];
+}
 if (empty($_SESSION['status_login'])) {
   header("location: login.php");
   exit();

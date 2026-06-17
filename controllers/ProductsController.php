@@ -14,7 +14,7 @@ class ProductsController
    */
   public function getAvailableProducts(): array
   {
-    $result = $this->db->query("SELECT product_id, product_name, price, stock FROM products WHERE stock > 0 AND deleted_at = NULL ORDER BY product_name ASC");
+    $result = $this->db->query("SELECT product_id, product_name, price, stock FROM products WHERE stock > 0 AND deleted_at IS NULL ORDER BY product_name ASC");
     if (!$result) {
       return [];
     }
