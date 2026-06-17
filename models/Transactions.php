@@ -11,6 +11,9 @@ class Transaction
   public int $adminId;
   public ?string $transactionDate;
   public PaymentType $paymentType;
+  public DateTime $created_at;
+  public DateTime $updated_at;
+  public DateTime $deleted_at;
 
   public function __construct(int $storeId, int $adminId, PaymentType $paymentType, ?int $transactionId = null)
   {

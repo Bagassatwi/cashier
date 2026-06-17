@@ -6,6 +6,9 @@ class TransactionDetail
   public int $product_id;
   public int $quantity;
   public float $subtotal;
+  public DateTime $created_at;
+  public DateTime $updated_at;
+  public DateTime $deleted_at;
 
   public function __construct(int $transactionId, int $productId, int $quantity, float $subtotal, ?int $detailId = null)
   {

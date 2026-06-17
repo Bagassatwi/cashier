@@ -14,7 +14,7 @@ class ProductsController
    */
   public function getAvailableProducts(): array
   {
-    $result = $this->db->query("SELECT product_id, product_name, price, stock FROM products WHERE stock > 0 ORDER BY product_name ASC");
+    $result = $this->db->query("SELECT product_id, product_name, price, stock FROM products WHERE stock > 0 AND deleted_at = NULL ORDER BY product_name ASC");
     if (!$result) {
       return [];
     }
@@ -43,8 +43,9 @@ class ProductsController
   }
   public function delete(int $id): bool | string
   {
-    $stmt = $this->db->prepare("DELETE FROM products WHERE product_id = ?");
-    $stmt->bind_param("i", $id);
+    $stmt = $this->db->prepare("UPDATE products SET deleted_at = ? WHERE product_id = ?");
+    $deleted_at = date("Y-m-d");
+    $stmt->bind_param("si", $deleted_at, $id);
     $res = $stmt->execute();
     $stmt->close();
 
@@ -77,8 +78,8 @@ class ProductsController
   public function searchProducts(string $searchTerm = ''): array
   {
     if ($searchTerm !== '') {
-      $stmt = $this->db->prepare("SELECT product_id, product_name, price, stock FROM products WHERE product_name LIKE ? ORDER BY product_name ASC");
-      $pattern = "%" . $searchTerm . "%";
+      $stmt = $this->db->prepare("SELECT product_id, product_name, price, stock FROM products WHERE product_name LIKE ? AND deleted_at = NULL ORDER BY product_name ASC");
+      $pattern = "%$searchTerm%";
       $stmt->bind_param("s", $pattern);
       $stmt->execute();
       $result = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
