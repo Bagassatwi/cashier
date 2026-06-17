@@ -64,8 +64,9 @@ class ProductsController
       $stmt->close();
       return $success;
     } else {
-      $stmt = $this->db->prepare("UPDATE products SET product_name = ?, price = ?, stock = ? WHERE product_id = ?");
-      $stmt->bind_param("sdii", $product->productName, $product->price, $product->stock, $product->productId);
+      $stmt = $this->db->prepare("UPDATE products SET product_name = ?, price = ?, stock = ?, updated_at = ? WHERE product_id = ?");
+      $updated_at = new DateTime()->format('Y-m-d H:i:s');
+      $stmt->bind_param("sdisi", $product->productName, $product->price, $product->stock, $updated_at, $product->productId);
       $success = $stmt->execute();
       $stmt->close();
       return $success;

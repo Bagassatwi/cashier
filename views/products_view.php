@@ -80,10 +80,10 @@
     <div class="bg-white rounded-lg shadow-2xl w-11/12 md:w-96">
       <div class="bg-linear-to-r from-blue-600 to-blue-700 p-6 flex items-center justify-between border-b border-blue-800">
         <div class="flex items-center gap-3">
-          <i class="fas fa-<?php echo $edit_product ? 'edit' : 'box-open'; ?> text-white text-2xl"></i>
-          <h3 class="text-xl font-bold text-white"><?php echo $edit_product ? 'Edit Product' : 'Add New Product'; ?></h3>
+          <i class="fas fa-<?php echo $edit_product ? 'edit' : 'box-open'; ?> text-black text-2xl"></i>
+          <h3 class="text-xl font-bold text-black"><?php echo $edit_product ? 'Edit Product' : 'Add New Product'; ?></h3>
         </div>
-        <button onclick="document.getElementById('addModal').classList.add('hidden'); location.href='products.php'" class="text-blue-100 hover:text-white transition"><i class="fas fa-times text-2xl"></i></button>
+        <button onclick="document.getElementById('addModal').classList.add('hidden'); location.href='products.php'" class="text-black hover:text-gray-700 transition"><i class="fas fa-times text-2xl"></i></button>
       </div>
       <div class="p-8">
         <?php if ($error !== null) { ?>

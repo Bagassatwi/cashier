@@ -37,8 +37,9 @@ class AdminController
 
   public function updateProfile(int $adminId, string $fullname): bool
   {
-    $stmt = $this->db->prepare("UPDATE admins SET fullname = ? WHERE admin_id = ?");
-    $stmt->bind_param("si", $fullname, $adminId);
+    $stmt = $this->db->prepare("UPDATE admins SET fullname = ?,updated_at = ? WHERE admin_id = ?");
+    $updated_at = new DateTime()->format('Y-m-d H:i:s');
+    $stmt->bind_param("ssi", $updated_at, $fullname, $adminId);
     $success = $stmt->execute();
     $stmt->close();
     return $success;
