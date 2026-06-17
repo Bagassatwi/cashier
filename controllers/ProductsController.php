@@ -65,7 +65,8 @@ class ProductsController
       return $success;
     } else {
       $stmt = $this->db->prepare("UPDATE products SET product_name = ?, price = ?, stock = ?, updated_at = ? WHERE product_id = ?");
-      $updated_at = new DateTime()->format('Y-m-d H:i:s');
+      $date = new DateTime();
+      $updated_at = $date->format('Y-m-d H:i:s');
       $stmt->bind_param("sdisi", $product->productName, $product->price, $product->stock, $updated_at, $product->productId);
       $success = $stmt->execute();
       $stmt->close();
