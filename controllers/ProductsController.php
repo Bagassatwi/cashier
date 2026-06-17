@@ -70,4 +70,23 @@ class ProductsController
       return $success;
     }
   }
+  /**
+   * Fetch products filtered by optional name pattern.
+   * @return array<array{product_id: int, product_name: string, price: float, stock: int}>
+   */
+  public function searchProducts(string $searchTerm = ''): array
+  {
+    if ($searchTerm !== '') {
+      $stmt = $this->db->prepare("SELECT product_id, product_name, price, stock FROM products WHERE product_name LIKE ? ORDER BY product_name ASC");
+      $pattern = "%" . $searchTerm . "%";
+      $stmt->bind_param("s", $pattern);
+      $stmt->execute();
+      $result = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+      $stmt->close();
+      return $result;
+    }
+
+    $result = $this->db->query("SELECT product_id, product_name, price, stock FROM products ORDER BY product_name ASC");
+    return $result ? $result->fetch_all(MYSQLI_ASSOC) : [];
+  }
 }
