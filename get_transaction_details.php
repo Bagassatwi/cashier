@@ -19,7 +19,7 @@ $trans_query = mysqli_query($conn, "
   SELECT t.transaction_id, c.store_name, a.fullname as admin_name, t.transaction_date, 
          SUM(td.subtotal) as total, COUNT(td.detail_id) as item_count
   FROM transactions t
-  JOIN stores c ON t.store_id = c.store_id
+  JOIN store c ON t.store_id = c.store_id
   JOIN admins a ON t.admin_id = a.admin_id
   JOIN transaction_details td ON t.transaction_id = td.transaction_id
   WHERE t.transaction_id = $transaction_id

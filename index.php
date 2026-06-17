@@ -54,7 +54,7 @@ $recentTrans = mysqli_query($conn, "
       <div class="p-8">
         <!-- Stats Cards -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
+          <div class="bg-linear-to-br from-blue-50 to-blue-100 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
             <div class="p-6">
               <div class="flex items-center justify-between mb-4">
                 <h3 class="text-sm font-semibold text-gray-600 uppercase tracking-wide">Total Products</h3>
@@ -69,7 +69,7 @@ $recentTrans = mysqli_query($conn, "
             </div>
           </div>
 
-          <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
+          <div class="bg-linear-to-br from-green-50 to-green-100 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
             <div class="p-6">
               <div class="flex items-center justify-between mb-4">
                 <h3 class="text-sm font-semibold text-gray-600 uppercase tracking-wide">Total stores</h3>
@@ -84,7 +84,7 @@ $recentTrans = mysqli_query($conn, "
             </div>
           </div>
 
-          <div class="bg-gradient-to-br from-orange-50 to-orange-100 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
+          <div class="bg-linear-to-br from-orange-50 to-orange-100 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
             <div class="p-6">
               <div class="flex items-center justify-between mb-4">
                 <h3 class="text-sm font-semibold text-gray-600 uppercase tracking-wide">Total Transactions</h3>
@@ -99,7 +99,7 @@ $recentTrans = mysqli_query($conn, "
             </div>
           </div>
 
-          <div class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
+          <div class="bg-linear-to-br from-purple-50 to-purple-100 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
             <div class="p-6">
               <div class="flex items-center justify-between mb-4">
                 <h3 class="text-sm font-semibold text-gray-600 uppercase tracking-wide">Total Sales</h3>
@@ -117,7 +117,7 @@ $recentTrans = mysqli_query($conn, "
 
         <!-- Recent Transactions -->
         <div class="bg-white rounded-lg shadow-md overflow-hidden">
-          <div class="bg-gradient-to-r from-gray-700 to-gray-800 p-6 border-b border-gray-300">
+          <div class="bg-linear-to-r from-gray-700 to-gray-800 p-6 border-b border-gray-300">
             <div class="flex items-center gap-3">
               <i class="fas fa-history text-white text-2xl"></i>
               <h3 class="text-xl font-bold text-white">Recent Transactions</h3>
@@ -167,13 +167,13 @@ $recentTrans = mysqli_query($conn, "
 
   <!-- Transaction Details Modal -->
   <div id="transactionModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-    <div class="bg-white rounded-lg shadow-2xl w-11/12 md:w-4/5 lg:w-3/4 overflow-y-auto">
-      <div class="sticky top-0 bg-gradient-to-r from-blue-600 to-blue-700 p-6 flex items-center justify-between border-b border-blue-800">
+    <div class="bg-white rounded-lg shadow-2xl w-9/12 2xl:w-7/12 overflow-y-auto">
+      <div class="sticky top-0 bg-linear-to-r from-blue-600 to-blue-700 p-6 flex items-center justify-between border-b border-blue-800">
         <div class="flex items-center gap-3">
           <i class="fas fa-receipt text-white text-2xl"></i>
-          <h3 class="text-2xl font-bold text-white">Transaction Details</h3>
+          <h3 class="text-2xl font-bold text-black">Transaction Details</h3>
         </div>
-        <button onclick="closeTransactionModal()" class="text-blue-100 hover:text-white transition">
+        <button onclick="closeTransactionModal()" class="text-black hover:text-gray-800 transition">
           <i class="fas fa-times text-2xl"></i>
         </button>
       </div>

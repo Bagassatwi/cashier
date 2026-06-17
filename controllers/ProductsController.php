@@ -1,5 +1,5 @@
 <?php
-include 'Database.php';
+require_once  'Database.php';
 
 class ProductsController
 {
@@ -9,11 +9,20 @@ class ProductsController
   {
     $this->db = Database::getConnection();
   }
-
-  public function getAll(int $id): ?Product
+  /**
+   * @return array<array{product_id: int, product_name: string, price: float, stock: int}>
+   */
+  public function getAvailableProducts(): array
+  {
+    $result = $this->db->query("SELECT product_id, product_name, price, stock FROM products WHERE stock > 0 ORDER BY product_name ASC");
+    if (!$result) {
+      return [];
+    }
+    return $result->fetch_all(MYSQLI_ASSOC);
+  }
+  public function getAll(): ?Product
   {
     $stmt = $this->db->prepare("SELECT product_id, product_name, price, stock FROM products");
-    $stmt->bind_param("i", $id);
     $stmt->execute();
     $res = $stmt->get_result()->fetch_assoc();
     $stmt->close();
