@@ -48,8 +48,10 @@ class AdminController
 
   public function updatePassword(int $adminId, string $newPassword): bool
   {
-    $stmt = $this->db->prepare("UPDATE admins SET password = ? WHERE admin_id = ?");
-    $stmt->bind_param("si", $newPassword, $adminId);
+    $stmt = $this->db->prepare("UPDATE admins SET password = ?,updated_at = ? WHERE admin_id = ?");
+    $date = new DateTime();
+    $updated_at = $date->format('Y-m-d H:i:s');
+    $stmt->bind_param("ssi", $newPassword, $updated_at, $adminId);
     $success = $stmt->execute();
     $stmt->close();
     return $success;
