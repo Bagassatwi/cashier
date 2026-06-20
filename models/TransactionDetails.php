@@ -5,17 +5,17 @@ class TransactionDetail
   public int $transaction_id;
   public int $product_id;
   public int $quantity;
-  public float $subtotal;
+  public float $basePrice;
   public DateTime $created_at;
   public DateTime $updated_at;
   public DateTime $deleted_at;
 
-  public function __construct(int $transactionId, int $productId, int $quantity, float $subtotal, ?int $detailId = null)
+  public function __construct(int $transactionId, int $productId, int $quantity, float $basePrice, ?int $detailId = null)
   {
     $this->detailId = $detailId;
     $this->transaction_id = $transactionId;
     $this->product_id = $productId;
     $this->quantity = $quantity;
-    $this->subtotal = $subtotal;
+    $this->$basePrice = $basePrice;
   }
 }
