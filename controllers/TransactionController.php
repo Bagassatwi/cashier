@@ -80,14 +80,15 @@ class TransactionController
   /**
    * Fetch individual breakdown records for items contained inside a target transaction.
    * @param int $transactionId
-   * @return array<array{detail_id: int, product_name: string, quantity: int, price: float, subtotal: float}>
+   * @return array<array{detail_id: int, product_name: string, quantity: int, price: float, sub_total: float}>
    */
   public function getTransactionLineItems(int $transactionId): array
   {
     $stmt = $this->db->prepare("
-      SELECT td.detail_id, p.product_name, td.quantity, p.price, td.subtotal
+      SELECT td.detail_id, p.product_name, td.quantity, p.price, t.sub_total
       FROM transaction_details td
       JOIN products p ON td.product_id = p.product_id
+      JOIN transactions t ON td.transaction_id = t.transaction_id
       WHERE td.transaction_id = ?
       ORDER BY td.detail_id ASC
     ");

@@ -97,7 +97,7 @@
                         </div>
                       <?php } else { ?>
                         <?php foreach ($_SESSION['cart'] as $item) { ?>
-                          <div class="flex items-center justify-between p-4 bg-gradient-to-r from-gray-50 to-blue-50 rounded-lg border border-gray-200 hover:border-blue-400 transition">
+                          <div class="flex items-center justify-between p-4 bg-linear-to-r from-gray-50 to-blue-50 rounded-lg border border-gray-200 hover:border-blue-400 transition">
                             <div class="flex-1">
                               <p class="font-bold text-gray-800"><?php echo htmlspecialchars($item['product_name']); ?></p>
                               <p class="text-sm text-gray-600">
@@ -136,7 +136,7 @@
 
           <div>
             <div class="sticky top-8 bg-white rounded-lg shadow-md overflow-hidden">
-              <div class="bg-gradient-to-r from-blue-600 to-blue-700 p-6">
+              <div class="bg-linear-to-r from-blue-600 to-blue-700 p-6">
                 <div class="flex items-center gap-3">
                   <i class="fas fa-calculator text-white text-2xl"></i>
                   <h4 class="text-xl font-bold text-white">Summary</h4>

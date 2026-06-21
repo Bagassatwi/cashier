@@ -46,7 +46,7 @@
             <td class="px-6 py-4 font-medium text-gray-800"><?php echo htmlspecialchars($detail['product_name']); ?></td>
             <td class="px-6 py-4 text-center text-gray-700 font-semibold"><?php echo (int)$detail['quantity']; ?></td>
             <td class="px-6 py-4 text-right text-gray-700">Rp <?php echo number_format($detail['price'], 0, ',', '.'); ?></td>
-            <td class="px-6 py-4 text-right font-bold text-gray-800">Rp <?php echo number_format($detail['subtotal'], 0, ',', '.'); ?></td>
+            <td class="px-6 py-4 text-right font-bold text-gray-800">Rp <?php echo number_format($detail['sub_total'], 0, ',', '.'); ?></td>
           </tr>
         <?php } ?>
       </tbody>
