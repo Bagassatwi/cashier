@@ -9,7 +9,7 @@ CREATE TABLE `store` (
 );
 
 CREATE TABLE `admins` (
-    `admins_id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    `admin_id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     `username` VARCHAR(100) NOT NULL UNIQUE,
     `password` VARCHAR(255) NOT NULL,
     `fullname` VARCHAR(255) NOT NULL,
@@ -32,14 +32,14 @@ CREATE TABLE `transactions` (
     `transaction_id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     `store_id` INT UNSIGNED NOT NULL,
     `admin_id` INT UNSIGNED NOT NULL,
-    `transaction_date` DATETIME NOT NULL,
+    `transaction_date` DATETIME NOT NULL DEFAULT NOW(),
     `payment_type` ENUM('Cash', 'Card') NOT NULL,
     `sub_total` DECIMAL(10, 2) NOT NULL DEFAULT 0.00,
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     `deleted_at` TIMESTAMP NULL DEFAULT NULL,
     CONSTRAINT `fk_transactions_store` FOREIGN KEY (`store_id`) REFERENCES `store` (`store_id`) ON DELETE RESTRICT ON UPDATE CASCADE,
-    CONSTRAINT `fk_transactions_admin` FOREIGN KEY (`admin_id`) REFERENCES `admins` (`admins_id`) ON DELETE RESTRICT ON UPDATE CASCADE
+    CONSTRAINT `fk_transactions_admin` FOREIGN KEY (`admin_id`) REFERENCES `admins` (`admin_id`) ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 CREATE TABLE `transaction_details` (

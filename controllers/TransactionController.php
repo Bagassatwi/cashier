@@ -25,7 +25,7 @@ class TransactionController
     $resTx = $this->db->query("SELECT COUNT(*) as count FROM transactions");
     if ($resTx) $stats['transactions'] = (int)$resTx->fetch_assoc()['count'];
 
-    $resSales = $this->db->query("SELECT SUM(subtotal) as total FROM transaction_details");
+    $resSales = $this->db->query("SELECT SUM(sub_total) as total FROM transactions");
     if ($resSales) $stats['sales'] = (float)($resSales->fetch_assoc()['total'] ?? 0.0);
 
     return $stats;
@@ -39,10 +39,9 @@ class TransactionController
   public function getRecentTransactions(int $limit = 5): array
   {
     $stmt = $this->db->prepare("
-      SELECT t.transaction_id, c.store_name, t.transaction_date, SUM(td.subtotal) as total
+      SELECT t.transaction_id, c.store_name, t.transaction_date, t.sub_total as total
       FROM transactions t
       JOIN store c ON t.store_id = c.store_id
-      JOIN transaction_details td ON t.transaction_id = td.transaction_id
       GROUP BY t.transaction_id
       ORDER BY t.transaction_date DESC
       LIMIT ?
@@ -63,7 +62,7 @@ class TransactionController
   {
     $stmt = $this->db->prepare("
       SELECT t.transaction_id, c.store_name, a.fullname as admin_name, t.transaction_date, 
-             SUM(td.subtotal) as total, COUNT(td.detail_id) as item_count
+             t.sub_total as total, COUNT(td.detail_id) as item_count
       FROM transactions t
       JOIN store c ON t.store_id = c.store_id
       JOIN admins a ON t.admin_id = a.admin_id
@@ -121,15 +120,19 @@ class TransactionController
   {
     if ($tx->transactionId === null) {
       $this->db->begin_transaction();
-      $stmt = $this->db->prepare("INSERT INTO transactions (store_id, admin_id, payment_type) VALUES (?, ?, ?)");
+      $stmt = $this->db->prepare("INSERT INTO transactions (store_id, admin_id, payment_type, sub_total) VALUES (?, ?, ?, ?)");
       $payment_type = $tx->paymentType->value;
-      $stmt->bind_param("iis", $tx->storeId, $tx->adminId, $payment_type);
-      $stmtDetail = $this->db->prepare("INSERT INTO transaction_details (transaction_id, product_id, quantity, subtotal) VALUES (?, ?, ?, ?)");
-      $success = $stmt->execute();
-      $trans_id = $this->db->insert_id;
+      $stmtDetail = $this->db->prepare("INSERT INTO transaction_details (transaction_id, base_price, product_id, quantity) VALUES (?, ?, ?, ?)");
+      $subtotal = 0;
       foreach ($items as $item) {
         $subtotal = $item['quantity'] * $item['price'];
-        $stmtDetail->bind_param("iiii", $trans_id, $item['product_id'], $item['quantity'], $subtotal);
+      }
+      $stmt->bind_param("iisi", $tx->storeId, $tx->adminId, $payment_type, $subtotal);
+      $success = $stmt->execute();
+      $trans_id = $this->db->insert_id;
+
+      foreach ($items as $item) {
+        $stmtDetail->bind_param("iiii", $trans_id, $item['price'], $item['product_id'], $item['quantity']);
         $success = $stmtDetail->execute();
       }
       $success = $this->db->commit();
@@ -146,10 +149,9 @@ class TransactionController
   public function getFilteredReports(string $fromDate, string $toDate): array
   {
     $stmt = $this->db->prepare("
-      SELECT t.transaction_id, c.store_name, t.transaction_date, SUM(td.subtotal) as total
+      SELECT t.transaction_id, c.store_name, t.transaction_date, t.sub_total as total
       FROM transactions t
       JOIN store c ON t.store_id = c.store_id
-      JOIN transaction_details td ON t.transaction_id = td.transaction_id
       WHERE DATE(t.transaction_date) >= ? AND DATE(t.transaction_date) <= ?
       GROUP BY t.transaction_id
       ORDER BY t.transaction_date DESC
@@ -168,9 +170,8 @@ class TransactionController
   public function getReportingStatistics(string $fromDate, string $toDate): array
   {
     $stmt = $this->db->prepare("
-      SELECT COUNT(DISTINCT t.transaction_id) as total_transactions, SUM(td.subtotal) as total_sales
+      SELECT COUNT(DISTINCT t.transaction_id) as total_transactions, t.sub_total as total_sales
       FROM transactions t
-      JOIN transaction_details td ON t.transaction_id = td.transaction_id
       WHERE DATE(t.transaction_date) >= ? AND DATE(t.transaction_date) <= ?
     ");
     $stmt->bind_param("ss", $fromDate, $toDate);

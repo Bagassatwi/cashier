@@ -1,8 +1,6 @@
 <?php
 session_start();
-if (!$_SESSION['cart']) {
-  $_SESSION['cart'] = [];
-}
+$_SESSION['cart'] ??= [];
 if (empty($_SESSION['status_login'])) {
   header("location: login.php");
   exit();
@@ -11,11 +9,11 @@ if (empty($_SESSION['status_login'])) {
 $page = $title = 'transactions';
 
 // Dependancy Injection / Imports
-include 'controllers/TransactionController.php';
-include 'controllers/ProductsController.php';
-include 'controllers/StoreController.php';
-include 'models/Transactions.php';
-include 'models/Products.php';
+include_once 'controllers/TransactionController.php';
+include_once 'controllers/ProductsController.php';
+include_once 'controllers/StoreController.php';
+include_once 'models/Transactions.php';
+include_once 'models/Products.php';
 
 $TC = new TransactionController();
 $PC = new ProductsController();
