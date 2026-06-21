@@ -1,5 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+<?php
+/**
+ * @var string $search
+ * @var array<string|int, array{product_id: int, product_name: string, price: float, stock: int}> $productsList */
+?>
 <?php include './head.php' ?>
 
 <body class="bg-gray-50">
@@ -76,7 +81,7 @@
     </main>
   </div>
 
-  <div id="addModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+  <div id="addModal" class="hidden fixed inset-0 z-50 items-center justify-center bg-black bg-opacity-50">
     <div class="bg-white rounded-lg shadow-2xl w-11/12 md:w-96">
       <div class="bg-linear-to-r from-blue-600 to-blue-700 p-6 flex items-center justify-between border-b border-blue-800">
         <div class="flex items-center gap-3">
@@ -117,6 +122,7 @@
   <script>
     <?php if ($edit_product !== null) { ?>
       document.getElementById('addModal').classList.remove('hidden');
+      document.getElementById('addModal').classList.add('flex');
     <?php } ?>
   </script>
 </body>

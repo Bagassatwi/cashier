@@ -1,5 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
+<?php
+/** @var array{products: int, stores: int, transactions: int, sales: float} $stats 
+ * @var array<string|int, array{transaction_id: int, store_name: string, transaction_date: string, total: float}> $recentTransactionsList */
+?>
 <?php include './head.php' ?>
 
 <body class="bg-gray-50">

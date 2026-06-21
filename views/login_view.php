@@ -6,7 +6,7 @@
   <div class="flex items-center justify-center min-h-screen">
     <section class="rounded-xl size-fit p-4 bg-white shadow-2xl">
       <h1 class="text-[2em] font-bold">Admin Login</h1>
-      <hr class="font-bold h-[2px] border-0 bg-[#333] mb-4">
+      <hr class="font-bold h-0.5 border-0 bg-[#333] mb-4">
       <form action="login_action.php" method="post" class="flex flex-col gap-4 justify-around w-[25dvw] h-auto">
         <div class="flex flex-col">
           <label class="text-[1.5em]" for="username">Username</label>

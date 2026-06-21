@@ -1,5 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
+<?php
+/**
+ * @var mixed $from_date
+ * @var mixed $to_date
+ * @var array<string|int, array{transaction_id: int, store_name: string, transaction_date: string, total: float}> $reportData
+ * @var int $total_transactions
+ * @var float $total_sales
+ * @var int|float $average_transaction
+ */
+?>
 <?php include './head.php' ?>
 
 <body class="bg-gray-50">
@@ -42,7 +52,7 @@
         </form>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
+          <div class="bg-linear-to-br from-blue-50 to-blue-100 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
             <div class="p-6">
               <div class="flex items-center justify-between mb-4">
                 <h3 class="text-sm font-bold text-gray-700 uppercase tracking-wide">Total Transactions</h3>
@@ -53,7 +63,7 @@
             </div>
           </div>
 
-          <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
+          <div class="bg-linear-to-br from-green-50 to-green-100 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
             <div class="p-6">
               <div class="flex items-center justify-between mb-4">
                 <h3 class="text-sm font-bold text-gray-700 uppercase tracking-wide">Total Sales</h3>
@@ -64,7 +74,7 @@
             </div>
           </div>
 
-          <div class="bg-gradient-to-br from-orange-50 to-orange-100 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
+          <div class="bg-linear-to-br from-orange-50 to-orange-100 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
             <div class="p-6">
               <div class="flex items-center justify-between mb-4">
                 <h3 class="text-sm font-bold text-gray-700 uppercase tracking-wide">Avg Transaction</h3>
@@ -77,7 +87,7 @@
         </div>
 
         <div class="bg-white rounded-lg shadow-md overflow-hidden">
-          <div class="bg-gradient-to-r from-gray-700 to-gray-800 p-6 border-b border-gray-300">
+          <div class="bg-linear-to-r from-gray-700 to-gray-800 p-6 border-b border-gray-300">
             <div class="flex items-center gap-3">
               <i class="fas fa-history text-white text-2xl"></i>
               <h3 class="text-xl font-bold text-white">Transaction History</h3>

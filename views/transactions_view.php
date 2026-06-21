@@ -1,5 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+<?php
+/** @var array<string|int, array{store_id: int, store_name: string}> $storesList 
+ * @var array<string|int, array{product_id: int, product_name: string, price: float, stock: int}> $productsList 
+ * @var int $total */
+?>
 <?php include './head.php' ?>
 
 <body class="bg-gray-50">

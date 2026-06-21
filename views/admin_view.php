@@ -1,5 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+<?php
+/** 
+ * @var null|Admin $adminModel
+ * @var mixed $view
+ */
+?>
 <?php include './head.php' ?>
 
 <body class="bg-gray-50">

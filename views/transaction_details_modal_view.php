@@ -1,3 +1,10 @@
+<?php
+
+/** @var array<string|int, array{detail_id: int, product_name: string, quantity: int, price: float, sub_total: float}> $lineItems 
+ * @var string $paymentTypeString 
+ * @var array{transaction_id: int, store_name: string, admin_name: string, transaction_date: string, total: float, item_count: int}|null $transactionOverview */
+
+?>
 <div class="space-y-6">
   <div class="grid grid-cols-2 md:grid-cols-4 gap-4 pb-6 border-b-2 border-gray-200">
     <div class="bg-blue-50 p-4 rounded-lg">
