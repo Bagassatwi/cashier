@@ -271,6 +271,7 @@
 
     localStorage.setItem('cart', JSON.stringify(items));
     renderUI();
+    productSelect.value = '';
   };
 
   const removeItem = (index) => {
