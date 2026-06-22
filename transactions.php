@@ -1,6 +1,5 @@
 <?php
 session_start();
-$_SESSION['cart'] ??= [];
 if (empty($_SESSION['status_login'])) {
   header("location: login.php");
   exit();
@@ -8,7 +7,6 @@ if (empty($_SESSION['status_login'])) {
 
 $page = $title = 'transactions';
 
-// Dependancy Injection / Imports
 include_once 'controllers/TransactionController.php';
 include_once 'controllers/ProductsController.php';
 include_once 'controllers/StoreController.php';
@@ -22,84 +20,66 @@ $SC = new StoreController();
 $error = '';
 $success = '';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'add_to_cart') {
-  $product_id = intval($_POST['product_id']);
-  $quantity = intval($_POST['quantity']);
-
-  $product = $PC->findById($product_id);
-
-  if (!$product) {
-    $error = "Product not found!";
-  } elseif ($quantity > $product->stock) {
-    $error = "Insufficient stock!";
-  } else {
-    $found = false;
-    foreach ($_SESSION['cart'] as &$item) {
-      if ($item['product_id'] === $product_id) {
-        $item['quantity'] += $quantity;
-        $found = true;
-        break;
-      }
-    }
-
-    if (!$found) {
-      $_SESSION['cart'][] = [
-        'product_id' => $product->productId,
-        'product_name' => $product->productName,
-        'price' => $product->price,
-        'quantity' => $quantity
-      ];
-    }
-    header("Location: transactions.php");
-    exit();
-  }
-}
-
-// Route: Handle Remove from Cart
-if (isset($_GET['remove_cart'])) {
-  $product_id = intval($_GET['remove_cart']);
-  foreach ($_SESSION['cart'] as $key => $item) {
-    if ($item['product_id'] === $product_id) {
-      unset($_SESSION['cart'][$key]);
-      break;
-    }
-  }
-  header("Location: transactions.php");
-  exit();
-}
-
-// Route: Handle Save Transaction
+// Handle Transaction Creation Pipeline via POST Payload
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'save_transaction') {
   $store_id = intval($_POST['store_id']);
   $payment_string = $_POST['payment_type'] ?? 'Cash';
+  $raw_cart_data = $_POST['cart_data'] ?? '[]';
+
+  $decoded_cart = json_decode($raw_cart_data, true);
 
   if (empty($store_id)) {
     $error = "Please select a store!";
-  } elseif (count($_SESSION['cart']) === 0) {
-    $error = "Cart is empty!";
+  } elseif (empty($decoded_cart) || !is_array($decoded_cart)) {
+    $error = "Cart is empty or contains malformed data!";
   } else {
-    $payment_type = PaymentType::tryFrom($payment_string) ?? PaymentType::Cash;
-    $transactionToSave = new Transaction($store_id, (int)$_SESSION['id_admin'], $payment_type);
+    // Reconstruct into application-compatible item array format
+    $processed_cart = [];
+    $stock_valid = true;
 
-    if ($TC->save($transactionToSave, $_SESSION['cart'])) {
-      $success = "Transaction processed successfully!";
-      $_SESSION['cart'] = [];
-    } else {
-      $error = "Failed to save transaction.";
+    foreach ($decoded_cart as $item) {
+      $p_id = intval($item['productId']);
+      $qty = intval($item['quantity']);
+      $product = $PC->findById($p_id);
+
+      if (!$product) {
+        $error = "Product ID {$p_id} could not be resolved.";
+        $stock_valid = false;
+        break;
+      }
+
+      if ($qty > $product->stock) {
+        $error = "Insufficient stock remaining for product: {$product->productName}.";
+        $stock_valid = false;
+        break;
+      }
+
+      $processed_cart[] = [
+        'product_id'   => $product->productId,
+        'product_name' => $product->productName,
+        'price'        => $product->price,
+        'quantity'     => $qty
+      ];
+    }
+
+    if ($stock_valid) {
+      $payment_type = PaymentType::tryFrom($payment_string) ?? PaymentType::Cash;
+      $transactionToSave = new Transaction($store_id, (int)$_SESSION['id_admin'], $payment_type);
+
+      if ($TC->save($transactionToSave, $processed_cart)) {
+        $success = "Transaction processed successfully!";
+      } else {
+        $error = "Database execution anomaly encountered during preservation.";
+      }
     }
   }
 }
 
-// Fetch datasets using domain models/controllers
 $storesList = $SC->getAllStores();
 $productsList = $PC->getAvailableProducts();
 
-// Calculations
+// Server-side calculations initialized to 0 defaults for view abstraction compliance
 $subtotal = 0;
-foreach ($_SESSION['cart'] as $item) {
-  $subtotal += $item['price'] * $item['quantity'];
-}
-$total = $subtotal;
+$total = 0;
 
-// Include the isolated view template
 include 'views/transactions_view.php';

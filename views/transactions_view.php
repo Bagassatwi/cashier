@@ -24,12 +24,12 @@
       </header>
 
       <div class="p-8">
-        <?php if ($error) { ?>
+        <?php if (!empty($error)) { ?>
           <div class="mb-4 p-4 bg-red-100 border-l-4 border-red-600 text-red-700 rounded-lg">
             <i class="fas fa-exclamation-circle mr-2"></i><?php echo htmlspecialchars($error); ?>
           </div>
         <?php } ?>
-        <?php if ($success) { ?>
+        <?php if (!empty($success)) { ?>
           <div class="mb-4 p-4 bg-green-100 border-l-4 border-green-600 text-green-700 rounded-lg">
             <i class="fas fa-check-circle mr-2"></i><?php echo htmlspecialchars($success); ?>
           </div>
@@ -52,6 +52,7 @@
 
               <div class="p-8">
                 <form method="POST" id="transactionForm">
+                  <input type="hidden" name="cart_data" id="cart_data">
                   <div class="mb-8">
                     <label class="block mb-3 text-sm font-bold text-gray-700 uppercase tracking-wide">
                       <i class="fas fa-user text-blue-600 mr-2"></i>Select store
@@ -74,7 +75,7 @@
                         <select id="product_select" class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-600 transition">
                           <option value="">Select a product...</option>
                           <?php foreach ($productsList as $product) { ?>
-                            <option value="<?php echo (int)$product['product_id']; ?>" data-price="<?php echo (float)$product['price']; ?>" data-stock="<?php echo (int)$product['stock']; ?>">
+                            <option value="<?php echo (int)$product['product_id']; ?>" data-price="<?php echo (float)$product['price']; ?>" data-stock="<?php echo (int)$product['stock']; ?>" data-name="<?php echo htmlspecialchars($product['product_name']); ?>">
                               <?php echo htmlspecialchars($product['product_name']) . ' (Rp ' . number_format($product['price'], 0, ',', '.') . ')'; ?>
                             </option>
                           <?php } ?>
@@ -95,40 +96,13 @@
                       <i class="fas fa-list text-gray-600"></i>Items in Cart
                     </h4>
                     <div class="space-y-3 max-h-80 overflow-y-auto" id="cartItems">
-                      <?php if (count($_SESSION['cart']) === 0) { ?>
-                        <div class="text-center py-8 text-gray-500">
-                          <i class="fas fa-inbox text-4xl mb-2 opacity-50"></i>
-                          <p>No items in cart yet</p>
-                        </div>
-                      <?php } else { ?>
-                        <?php foreach ($_SESSION['cart'] as $item) { ?>
-                          <div class="flex items-center justify-between p-4 bg-linear-to-r from-gray-50 to-blue-50 rounded-lg border border-gray-200 hover:border-blue-400 transition">
-                            <div class="flex-1">
-                              <p class="font-bold text-gray-800"><?php echo htmlspecialchars($item['product_name']); ?></p>
-                              <p class="text-sm text-gray-600">
-                                Qty: <span class="font-semibold"><?php echo (int)$item['quantity']; ?></span> ×
-                                Rp <span class="font-semibold"><?php echo number_format($item['price'], 0, ',', '.'); ?></span>
-                              </p>
-                            </div>
-                            <div class="flex items-center gap-6">
-                              <div class="text-right">
-                                <p class="text-xs text-gray-600">Subtotal</p>
-                                <p class="text-xl font-bold text-green-600">Rp <?php echo number_format($item['price'] * $item['quantity'], 0, ',', '.'); ?></p>
-                              </div>
-                              <a href="?remove_cart=<?php echo (int)$item['product_id']; ?>" class="inline-flex items-center justify-center w-10 h-10 text-white bg-red-600 hover:bg-red-700 rounded-lg transition">
-                                <i class="fas fa-trash-alt text-sm"></i>
-                              </a>
-                            </div>
-                          </div>
-                        <?php } ?>
-                      <?php } ?>
                     </div>
                   </div>
 
                   <div class="flex gap-4">
-                    <a href="transactions.php" class="flex-1 px-4 py-3 font-bold text-gray-700 border-2 border-gray-300 hover:bg-gray-100 rounded-lg text-center transition">
+                    <button type="button" onclick="clearCart()" class="flex-1 px-4 py-3 font-bold text-gray-700 border-2 border-gray-300 hover:bg-gray-100 rounded-lg text-center transition">
                       <i class="fas fa-redo mr-2"></i>Reset
-                    </a>
+                    </button>
                     <button type="submit" class="flex-1 px-4 py-3 font-bold text-white bg-green-600 hover:bg-green-700 rounded-lg transition" onclick="return saveTrans()">
                       <i class="fas fa-check-circle mr-2"></i>Save Transaction
                     </button>
@@ -150,17 +124,17 @@
               <div class="p-6">
                 <div class="mb-6 p-4 bg-blue-50 rounded-lg border-l-4 border-blue-600">
                   <p class="text-sm text-gray-600 font-semibold">Items in Cart</p>
-                  <p class="text-3xl font-bold text-blue-600"><?php echo count($_SESSION['cart']); ?></p>
+                  <p class="text-3xl font-bold text-blue-600" id="summaryCount">0</p>
                 </div>
                 <div class="space-y-4 mb-8">
                   <div class="flex justify-between text-gray-700">
                     <span class="font-semibold">Subtotal:</span>
-                    <span class="font-semibold">Rp <?php echo number_format($subtotal, 0, ',', '.'); ?></span>
+                    <span class="font-semibold" id="summarySubtotal">Rp 0</span>
                   </div>
                   <div class="pt-4 border-t-2 border-gray-200">
                     <div class="flex justify-between">
                       <span class="font-bold text-gray-800">Total Amount:</span>
-                      <span class="text-3xl font-bold text-green-600">Rp <?php echo number_format($total, 0, ',', '.'); ?></span>
+                      <span class="text-3xl font-bold text-green-600" id="summaryTotal">Rp 0</span>
                     </div>
                   </div>
                 </div>
@@ -183,30 +157,133 @@
 </body>
 
 </html>
+
 <script>
-  function addToCart() {
+  let items = [];
+  const itemsInCartContainer = document.getElementById('cartItems');
+
+  const parseCart = () => {
+    const data = localStorage.getItem('cart');
+    try {
+      return data ? JSON.parse(data) : [];
+    } catch (e) {
+      return [];
+    }
+  };
+
+  const formatCurrency = (value) => {
+    return new Intl.NumberFormat("id-ID", {
+      style: "currency",
+      currency: "IDR",
+      maximumFractionDigits: 0
+    }).format(value);
+  };
+
+  const renderUI = () => {
+    itemsInCartContainer.textContent = '';
+
+    if (items.length === 0) {
+      const emptyContainer = document.createElement('div');
+      emptyContainer.className = 'text-center py-8 text-gray-500';
+      emptyContainer.innerHTML = '<i class="fas fa-inbox text-4xl mb-2 opacity-50"></i><p>No items in cart yet</p>';
+      itemsInCartContainer.appendChild(emptyContainer);
+
+      document.getElementById('summaryCount').textContent = '0';
+      document.getElementById('summarySubtotal').textContent = formatCurrency(0);
+      document.getElementById('summaryTotal').textContent = formatCurrency(0);
+      return;
+    }
+
+    const fragment = document.createDocumentFragment();
+    let computedSubtotal = 0;
+
+    items.forEach((element, index) => {
+      const itemSubtotal = parseFloat(element.price) * parseInt(element.quantity);
+      computedSubtotal += itemSubtotal;
+
+      const row = document.createElement('div');
+      row.className = 'flex items-center justify-between p-4 bg-linear-to-r from-gray-50 to-blue-50 rounded-lg border border-gray-200 hover:border-blue-400 transition';
+
+      row.innerHTML = `
+        <div class="flex-1">
+          <p class="font-bold text-gray-800">${element.name}</p>
+          <p class="text-sm text-gray-600">
+            Qty: <span class="font-semibold">${element.quantity}</span> × <span class="font-semibold">${formatCurrency(element.price)}</span>
+          </p>
+        </div>
+        <div class="flex items-center gap-6">
+          <div class="text-right">
+            <p class="text-xs text-gray-600">Subtotal</p>
+            <p class="text-xl font-bold text-green-600">${formatCurrency(itemSubtotal)}</p>
+          </div>
+          <button type="button" onclick="removeItem(${index})" class="inline-flex items-center justify-center w-10 h-10 text-white bg-red-600 hover:bg-red-700 rounded-lg transition">
+            <i class="fas fa-trash-alt text-sm"></i>
+          </button>
+        </div>
+      `;
+      fragment.appendChild(row);
+    });
+
+    itemsInCartContainer.appendChild(fragment);
+    document.getElementById('summaryCount').textContent = items.length.toString();
+    document.getElementById('summarySubtotal').textContent = formatCurrency(computedSubtotal);
+    document.getElementById('summaryTotal').textContent = formatCurrency(computedSubtotal);
+  };
+
+  const addToCart = () => {
     const productSelect = document.getElementById('product_select');
-    const quantityInput = document.getElementById('quantity_input');
     const productId = productSelect.value;
+    const quantityInput = document.getElementById('quantity_input');
     const quantity = parseInt(quantityInput.value);
 
     if (!productId) {
       alert('Please select a product!');
       return;
     }
-    if (quantity <= 0) {
+    if (isNaN(quantity) || quantity <= 0) {
       alert('Please enter a valid quantity!');
       return;
     }
 
-    const form = document.createElement('form');
-    form.method = 'POST';
-    form.innerHTML = '<input type="hidden" name="action" value="add_to_cart">' +
-      '<input type="hidden" name="product_id" value="' + productId + '">' +
-      '<input type="hidden" name="quantity" value="' + quantity + '">';
-    document.body.appendChild(form);
-    form.submit();
-  }
+    const selectedOption = productSelect.options[productSelect.selectedIndex];
+    const name = selectedOption.getAttribute('data-name');
+    const price = parseFloat(selectedOption.getAttribute('data-price'));
+    const stock = parseInt(selectedOption.getAttribute('data-stock'));
+
+    const existingIndex = items.findIndex(item => item.productId === productId);
+    let currentQtyInCart = existingIndex !== -1 ? items[existingIndex].quantity : 0;
+
+    if ((currentQtyInCart + quantity) > stock) {
+      alert(`Insufficient stock! Available stock: ${stock}`);
+      return;
+    }
+
+    if (existingIndex !== -1) {
+      items[existingIndex].quantity += quantity;
+    } else {
+      items.push({
+        name,
+        price,
+        productId,
+        quantity
+      });
+    }
+
+    localStorage.setItem('cart', JSON.stringify(items));
+    renderUI();
+  };
+
+  const removeItem = (index) => {
+    items.splice(index, 1);
+    localStorage.setItem('cart', JSON.stringify(items));
+    renderUI();
+  };
+
+  const clearCart = () => {
+    items = [];
+    localStorage.removeItem('cart');
+    renderUI();
+  };
 
   function saveTrans() {
     const storeId = document.getElementById('store_id').value;
@@ -214,6 +291,15 @@
       alert('Please select a store!');
       return false;
     }
+    if (items.length === 0) {
+      alert('Your cart is empty!');
+      return false;
+    }
+    document.getElementById('cart_data').value = JSON.stringify(items);
+    localStorage.removeItem('cart'); // Clear storage upon validation pass
     return true;
   }
+
+  items = parseCart();
+  renderUI();
 </script>
