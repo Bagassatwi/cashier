@@ -1,3 +1,5 @@
+-- 1. Base Table Declarations
+
 CREATE TABLE `store` (
     `store_id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     `store_name` VARCHAR(255) NOT NULL,
@@ -37,9 +39,7 @@ CREATE TABLE `transactions` (
     `sub_total` DECIMAL(10, 2) NOT NULL DEFAULT 0.00,
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    `deleted_at` TIMESTAMP NULL DEFAULT NULL,
-    CONSTRAINT `fk_transactions_store` FOREIGN KEY (`store_id`) REFERENCES `store` (`store_id`) ON DELETE RESTRICT ON UPDATE CASCADE,
-    CONSTRAINT `fk_transactions_admin` FOREIGN KEY (`admin_id`) REFERENCES `admins` (`admin_id`) ON DELETE RESTRICT ON UPDATE CASCADE
+    `deleted_at` TIMESTAMP NULL DEFAULT NULL
 );
 
 CREATE TABLE `transaction_details` (
@@ -50,7 +50,27 @@ CREATE TABLE `transaction_details` (
     `base_price` DECIMAL(10, 2) NOT NULL,
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    `deleted_at` TIMESTAMP NULL DEFAULT NULL,
-    CONSTRAINT `fk_details_transaction` FOREIGN KEY (`transaction_id`) REFERENCES `transactions` (`transaction_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-    CONSTRAINT `fk_details_product` FOREIGN KEY (`product_id`) REFERENCES `products` (`product_id`) ON DELETE RESTRICT ON UPDATE CASCADE
+    `deleted_at` TIMESTAMP NULL DEFAULT NULL
 );
+
+-- 2. Constraint Applications via ALTER TABLE
+
+-- Table: transactions
+ALTER TABLE `transactions`
+    ADD CONSTRAINT `fk_transactions_store` 
+    FOREIGN KEY (`store_id`) REFERENCES `store` (`store_id`) 
+    ON DELETE RESTRICT ON UPDATE CASCADE,
+    
+    ADD CONSTRAINT `fk_transactions_admin` 
+    FOREIGN KEY (`admin_id`) REFERENCES `admins` (`admin_id`) 
+    ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- Table: transaction_details
+ALTER TABLE `transaction_details`
+    ADD CONSTRAINT `fk_details_transaction` 
+    FOREIGN KEY (`transaction_id`) REFERENCES `transactions` (`transaction_id`) 
+    ON DELETE CASCADE ON UPDATE CASCADE,
+    
+    ADD CONSTRAINT `fk_details_product` 
+    FOREIGN KEY (`product_id`) REFERENCES `products` (`product_id`) 
+    ON DELETE RESTRICT ON UPDATE CASCADE;
