@@ -80,9 +80,9 @@
         <div class="bg-white rounded-lg shadow-md overflow-hidden">
           <div class="bg-linear-to-r from-gray-700 to-gray-800 p-6 border-b border-gray-300">
             <div class="flex items-center gap-3">
-              <i class="fas fa-history text-white text-2xl"></i>
-              <h3 class="text-xl font-bold text-white">Recent Transactions</h3>
-              <span class="ml-auto text-gray-300 text-sm"><?php echo (int)$stats['transactions']; ?> total</span>
+              <i class="fas fa-history text-black text-2xl"></i>
+              <h3 class="text-xl font-bold text-black">Recent Transactions</h3>
+              <span class="ml-auto text-gray-600 text-sm"><?php echo (int)$stats['transactions']; ?> total</span>
             </div>
           </div>
           <div class="overflow-x-auto">

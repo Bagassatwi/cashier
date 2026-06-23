@@ -117,8 +117,8 @@
             <div class="sticky top-8 bg-white rounded-lg shadow-md overflow-hidden">
               <div class="bg-linear-to-r from-blue-600 to-blue-700 p-6">
                 <div class="flex items-center gap-3">
-                  <i class="fas fa-calculator text-white text-2xl"></i>
-                  <h4 class="text-xl font-bold text-white">Summary</h4>
+                  <i class="fas fa-calculator text-black text-2xl"></i>
+                  <h4 class="text-xl font-bold text-black">Summary</h4>
                 </div>
               </div>
               <div class="p-6">

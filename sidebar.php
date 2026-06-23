@@ -1,3 +1,9 @@
+<?php
+
+/**
+ * @var string $page;
+ */
+?>
 <aside class="w-64 max-h-screen sticky top-0 text-white bg-gray-900 shadow-lg">
   <div class="p-6 border-b border-gray-700">
     <h1 class="flex items-center gap-2 text-2xl font-bold">
