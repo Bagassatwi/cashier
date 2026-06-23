@@ -92,4 +92,20 @@ class ProductsController
     $result = $this->db->query("SELECT product_id, product_name, price, stock FROM products WHERE deleted_at IS NULL ORDER BY product_name ASC");
     return $result ? $result->fetch_all(MYSQLI_ASSOC) : [];
   }
+  /**
+   * Permanently deletes a product from the database.
+   * Will fail if restricted by foreign key constraints.
+   */
+  public function hardDelete(int $id): bool | string
+  {
+    try {
+      $stmt = $this->db->prepare("DELETE FROM products WHERE product_id = ?");
+      $stmt->bind_param("i", $id);
+      $res = $stmt->execute();
+      $stmt->close();
+      return $res;
+    } catch (mysqli_sql_exception $e) {
+      return $e->getMessage();
+    }
+  }
 }

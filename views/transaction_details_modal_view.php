@@ -3,7 +3,6 @@
 /** @var array<string|int, array{detail_id: int, product_name: string, quantity: int, price: float, sub_total: float}> $lineItems 
  * @var string $paymentTypeString 
  * @var array{transaction_id: int, store_name: string, admin_name: string, transaction_date: string, total: float, item_count: int}|null $transactionOverview */
-
 ?>
 <div class="space-y-6">
   <div class="grid grid-cols-2 md:grid-cols-4 gap-4 pb-6 border-b-2 border-gray-200">
@@ -50,10 +49,10 @@
           $bg_class = ($row_count % 2 === 0) ? 'bg-white' : 'bg-gray-50';
         ?>
           <tr class="<?php echo $bg_class; ?> hover:bg-blue-50 transition">
-            <td class="px-6 py-4 font-medium text-gray-800"><?php echo htmlspecialchars($detail['product_name']); ?></td>
-            <td class="px-6 py-4 text-center text-gray-700 font-semibold"><?php echo (int)$detail['quantity']; ?></td>
-            <td class="px-6 py-4 text-right text-gray-700">Rp <?php echo number_format($detail['price'], 0, ',', '.'); ?></td>
-            <td class="px-6 py-4 text-right font-bold text-gray-800">Rp <?php echo number_format($detail['sub_total'], 0, ',', '.'); ?></td>
+            <td class="px-6 py-4 font-medium <?php echo ($detail['product_name']) === null ? 'italic text-gray-400' : 'text-gray-800'; ?>"><?php echo htmlspecialchars($detail['product_name'] ?? "Product Deleted"); ?></td>
+            <td class="px-6 py-4 text-center <?php echo ($detail['product_name']) === null ? 'italic text-gray-400' : 'text-gray-800'; ?> font-semibold"><?php echo (int)$detail['quantity']; ?></td>
+            <td class="px-6 py-4 text-right <?php echo ($detail['product_name']) === null ? 'italic text-gray-400' : 'text-gray-800'; ?>">Rp <?php echo number_format($detail['price'], 0, ',', '.'); ?></td>
+            <td class="px-6 py-4 text-right font-bold <?php echo ($detail['product_name']) === null ? 'italic text-gray-400' : 'text-gray-800'; ?>">Rp <?php echo number_format($detail['sub_total'], 0, ',', '.'); ?></td>
           </tr>
         <?php } ?>
       </tbody>

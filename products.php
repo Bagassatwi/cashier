@@ -23,6 +23,19 @@ if (isset($_GET['delete'])) {
   }
 }
 
+// Route: Handle Hard Delete
+if (isset($_GET['hard_delete'])) {
+  $product_id = intval($_GET['hard_delete']);
+  $res = $PC->hardDelete($product_id);
+  if ($res === true) {
+    echo "<script>alert('Product permanently deleted successfully!');location.href='products.php';</script>";
+    exit();
+  } else {
+    echo "<script>alert('Error performing hard delete: " . addslashes($res) . "');location.href='products.php';</script>";
+    exit();
+  }
+}
+
 // Route: Handle Add Product
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'add') {
   $product_name = htmlspecialchars($_POST['product_name'] ?? '');
@@ -67,6 +80,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     }
   }
 }
+
+
 
 $search = isset($_GET['search']) ? htmlspecialchars($_GET['search']) : '';
 $productsList = $PC->searchProducts($search);

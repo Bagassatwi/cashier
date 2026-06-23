@@ -45,7 +45,7 @@ CREATE TABLE `transactions` (
 CREATE TABLE `transaction_details` (
     `detail_id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     `transaction_id` INT UNSIGNED NOT NULL,
-    `product_id` INT UNSIGNED NOT NULL,
+    `product_id` INT UNSIGNED,
     `quantity` INT NOT NULL,
     `base_price` DECIMAL(10, 2) NOT NULL,
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -73,4 +73,4 @@ ALTER TABLE `transaction_details`
     
     ADD CONSTRAINT `fk_details_product` 
     FOREIGN KEY (`product_id`) REFERENCES `products` (`product_id`) 
-    ON DELETE RESTRICT ON UPDATE CASCADE;
+    ON DELETE SET NULL ON UPDATE CASCADE;

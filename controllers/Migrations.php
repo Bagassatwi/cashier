@@ -14,6 +14,7 @@ try {
   $db = new mysqli('localhost', 'root', '');
 
   // Initialize Database
+  $db->query("DROP DATABASE IF EXISTS mini_cashier");
   $db->query("CREATE DATABASE IF NOT EXISTS mini_cashier");
   $db->query("USE mini_cashier");
   echo "Database 'mini_cashier' initialized.\n";

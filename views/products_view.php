@@ -69,6 +69,7 @@
                       <div class="flex gap-2 justify-center">
                         <a href="?edit=<?php echo (int)$row['product_id']; ?>" class="inline-flex items-center gap-1 px-3 py-2 text-sm text-white bg-yellow-500 hover:bg-yellow-600 rounded transition"><i class="fas fa-edit"></i>Edit</a>
                         <a href="?delete=<?php echo (int)$row['product_id']; ?>" onclick="return confirm('Are you sure you want to delete this product?')" class="inline-flex items-center gap-1 px-3 py-2 text-sm text-white bg-red-600 hover:bg-red-700 rounded transition"><i class="fas fa-trash"></i>Delete</a>
+                        <a href="?hard_delete=<?php echo (int)$row['product_id']; ?>" onclick="return confirm('CRITICAL WARNING: This will permanently delete the item. This action cannot be undone. Proceed?')" class="inline-flex items-center gap-1 px-3 py-2 text-sm text-white bg-red-600 hover:bg-red-700 rounded transition"><i class="fas fa-trash-alt"></i>Hard Delete</a>
                       </div>
                     </td>
                   </tr>

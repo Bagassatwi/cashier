@@ -85,9 +85,9 @@ class TransactionController
   public function getTransactionLineItems(int $transactionId): array
   {
     $stmt = $this->db->prepare("
-      SELECT td.detail_id, p.product_name, td.quantity, p.price, t.sub_total
+      SELECT td.detail_id, p.product_name, td.quantity, td.base_price as price, td.quantity * td.base_price as sub_total
       FROM transaction_details td
-      JOIN products p ON td.product_id = p.product_id
+      LEFT JOIN products p ON td.product_id = p.product_id
       JOIN transactions t ON td.transaction_id = t.transaction_id
       WHERE td.transaction_id = ?
       ORDER BY td.detail_id ASC
