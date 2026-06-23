@@ -80,7 +80,7 @@ class ProductsController
   public function searchProducts(string $searchTerm = ''): array
   {
     if ($searchTerm !== '') {
-      $stmt = $this->db->prepare("SELECT product_id, product_name, price, stock FROM products WHERE product_name LIKE ? AND deleted_at = NULL ORDER BY product_name ASC");
+      $stmt = $this->db->prepare("SELECT product_id, product_name, price, stock FROM products WHERE product_name LIKE ? AND deleted_at IS NULL ORDER BY product_name ASC");
       $pattern = "%$searchTerm%";
       $stmt->bind_param("s", $pattern);
       $stmt->execute();

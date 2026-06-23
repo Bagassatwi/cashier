@@ -29,7 +29,7 @@
             <h3 class="text-3xl font-bold text-gray-800">Product Inventory</h3>
             <p class="text-gray-600 text-sm mt-1">Manage your product catalog and stock</p>
           </div>
-          <button onclick="document.getElementById('addModal').classList.remove('hidden')" class="inline-flex items-center gap-2 px-6 py-3 text-white bg-blue-600 hover:bg-blue-700 rounded-lg font-semibold transition"><i class="fas fa-plus-circle"></i> Add New Product</button>
+          <button onclick="document.getElementById('addModal').classList.remove('hidden'); document.getElementById('addModal').classList.add('flex')" class="inline-flex items-center gap-2 px-6 py-3 text-white bg-blue-600 hover:bg-blue-700 rounded-lg font-semibold transition"><i class="fas fa-plus-circle"></i> Add New Product</button>
         </div>
 
         <div class="mb-6">

@@ -11,7 +11,7 @@ $TC = new TransactionController();
 
 // Populate model metrics payload through the controller abstraction layer
 $stats = $TC->getDashboardStatistics();
-$recentTransactionsList = $TC->getRecentTransactions(5);
+$recentTransactionsList = $TC->getRecentTransactions(-1);
 
 // Structural view instantiation
 include 'views/dashboard_view.php';
