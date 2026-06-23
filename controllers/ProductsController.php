@@ -89,7 +89,7 @@ class ProductsController
       return $result;
     }
 
-    $result = $this->db->query("SELECT product_id, product_name, price, stock FROM products ORDER BY product_name ASC");
+    $result = $this->db->query("SELECT product_id, product_name, price, stock FROM products WHERE deleted_at IS NULL ORDER BY product_name ASC");
     return $result ? $result->fetch_all(MYSQLI_ASSOC) : [];
   }
 }
